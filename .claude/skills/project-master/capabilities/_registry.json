@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2025-11-04",
+  "description": "Registre des capacités - S'enrichit dynamiquement durant le projet",
+
+  "capabilities": [],
+
+  "statistics": {
+    "total_capabilities": 0,
+    "user_provided": 0,
+    "fetched_from_web": 0,
+    "auto_learned": 0,
+    "categories": {
+      "frameworks": 0,
+      "databases": 0,
+      "architectures": 0,
+      "patterns": 0,
+      "tools": 0,
+      "languages": 0,
+      "project-guidelines": 0
+    }
+  },
+
+  "notes": "Ce registre démarre VIDE et s'enrichit au fur et à mesure que l'utilisateur fournit de la documentation ou que project-master apprend."
+}

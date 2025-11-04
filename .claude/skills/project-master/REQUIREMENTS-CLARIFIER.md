@@ -92,22 +92,59 @@ Identifier les ambiguïtés dans la demande utilisateur et poser les bonnes ques
 
 ## Format de Retour
 
-Si clarification nécessaire :
+⚠️ **IMPORTANT** : NE JAMAIS afficher ces formats directement à l'utilisateur !
+→ Claude les transformera en dialogue naturel avec choix interactifs.
+
+### Si clarification nécessaire
 
 ```json
 {
   "status": "needs_clarification",
-  "reason": "Demande trop vague : 'Améliore le module de facturation'",
+  "impact": {
+    "classification": "MINEUR|MODÉRÉ|MAJEUR",
+    "estimated_time": "Estimation approximative",
+    "files_affected": 0,
+    "validation_required": false
+  },
   "questions": [
-    "Que veux-tu améliorer exactement ? (Performance / Fonctionnalités / UI / Code)",
-    "Y a-t-il un problème spécifique à résoudre ?",
-    "Quel est l'objectif principal ?",
-    "Y a-t-il des contraintes ?"
+    {
+      "question": "Que veux-tu améliorer exactement dans le module de facturation ?",
+      "context": "Cela m'aidera à créer un plan précis et adapté à tes besoins",
+      "suggestions": [
+        "Performance (vitesse d'exécution)",
+        "Fonctionnalités (nouvelles features)",
+        "Interface utilisateur (UX/UI)",
+        "Code (refactoring, maintenabilité)"
+      ],
+      "allow_custom": true
+    },
+    {
+      "question": "Y a-t-il un problème spécifique que tu veux résoudre ?",
+      "context": "Cela m'aidera à prioriser les actions",
+      "suggestions": [
+        "Oui, je vais expliquer",
+        "Non, amélioration générale"
+      ],
+      "allow_custom": true
+    },
+    {
+      "question": "Y a-t-il des contraintes à respecter ?",
+      "context": "Temps, compatibilité, budget technique, etc.",
+      "suggestions": [
+        "Aucune contrainte particulière",
+        "Contraintes de temps (urgent)",
+        "Compatibilité avec version existante",
+        "Limité en ressources"
+      ],
+      "allow_custom": true
+    }
   ]
 }
 ```
 
-Si clarification non nécessaire :
+**→ Claude utilisera AskUserQuestion pour créer des choix interactifs**
+
+### Si clarification non nécessaire
 
 ```json
 {
@@ -115,3 +152,5 @@ Si clarification non nécessaire :
   "summary": "Créer module Effectifs complet avec CRUD, models, UI, tests"
 }
 ```
+
+**→ Claude continuera directement vers l'analyse d'impact**
