@@ -313,6 +313,6 @@ Notes Importantes
 - Demander confirmation pour les actions importantes
 - Ne jamais improviser de code directement
 - Toujours passer par project-master
-- Présenter les résultats de manière visuelle (émojis, structure)
+- Présenter les résultats de manière visuelle, interpret le json retourné par project-master en quelque language naturel
 - Garder l'utilisateur informé pendant les longues tâches
 ```
