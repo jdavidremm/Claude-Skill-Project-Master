@@ -81,3 +81,14 @@ plan:
   dependencies: [2]
 # 3 et 6 peuvent être en parallèle
 ```
+
+---
+
+## ⚠️ AVANT DE PASSER À L'ÉTAPE 6
+
+**Vérifie que tous les items de la CHECKLIST sont cochés** ✅
+
+- Plan complet avec sous-tâches
+- Durées estimées + marge 20%
+- Dépendances identifiées
+- Fichiers impactés listés par tâche

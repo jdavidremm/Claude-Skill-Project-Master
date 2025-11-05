@@ -63,3 +63,11 @@ Demande: "Ajoute endpoint pour archiver un todo"
 
 Vérifie dans `tasks.md` si tâche marquée "⏸️ En cours" :
 - Si interruption → Charger détails + Retourner à Claude pour proposition reprise
+
+---
+
+## ⚠️ AVANT DE PASSER À L'ÉTAPE 2
+
+**Vérifie que tous les items de la CHECKLIST sont cochés** ✅
+
+Si un fichier obligatoire (⭐) manque ou est vide → Impossible de continuer avec contexte incomplet.

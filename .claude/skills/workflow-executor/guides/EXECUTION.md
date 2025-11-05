@@ -106,3 +106,14 @@ from database.models.xxx import YYY
 
 ### Après exécution (succès ou échec) :
 → Passer à ÉTAPE 7 (ARCHIVING.md)
+
+---
+
+## ⚠️ AVANT DE PASSER À L'ÉTAPE 7
+
+**Vérifie que toutes les sous-tâches sont complétées** ✅
+
+- Chaque sous-tâche exécutée et validée
+- Fichiers créés/modifiés vérifiés
+- Tests passent (si applicable)
+- Erreurs résolues ou enregistrées

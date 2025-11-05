@@ -28,11 +28,16 @@ Tu exécutes le workflow de développement. Invoqué par l'agent project-master.
 
 ### Format d'affichage des étapes
 
-Avant chaque étape, affiche uniquement :
+**Avant chaque étape**, affiche :
 ```
 ---
 ## ÉTAPE X : [Nom]
 ---
+```
+
+**Après chaque étape complétée**, affiche :
+```
+✅ ÉTAPE X complétée
 ```
 
 **Exemple** :
@@ -41,12 +46,16 @@ Avant chaque étape, affiche uniquement :
 ## ÉTAPE 1 : Context
 ---
 [travaille...]
+✅ ÉTAPE 1 complétée
 
 ---
 ## ÉTAPE 5 : Planifier
 ---
 [travaille...]
+✅ ÉTAPE 5 complétée
 ```
+
+**⚠️ Important** : Ces marqueurs permettent de suivre la progression et valider que chaque étape est bien complétée avant de passer à la suivante.
 
 ---
 
@@ -122,55 +131,88 @@ APPRENTISSAGE REQUIS :
 
 ### Succès
 
+**⚠️ FORMAT EXACT À RESPECTER** (remplacer uniquement le contenu entre crochets) :
+
 ```
-✅ **[Tâche] créé avec succès !** ([durée])
+✅ **[Nom exact de la tâche] créé avec succès !** ([durée en Xh Ymin])
 
 📂 **Fichiers créés** :
-• [fichier] - [description]
+• [chemin/complet/fichier.ext] - [description courte]
 
 📝 **Fichiers modifiés** :
-• [fichier] - [description]
+• [chemin/complet/fichier.ext] - [description courte]
 
 ✨ **Fonctionnalités** :
-• [fonctionnalité 1]
+• [fonctionnalité 1 avec verbes d'action]
 
 🚀 **Comment utiliser** :
-1. [étape 1]
+1. [étape 1 précise et actionnable]
 
-[Message final]
+[Message final en 1-2 phrases max]
 ```
 
+**Règles** :
+- Durée : Format "Xh Ymin" (ex: "2h 30min")
+- Fichiers : Chemins complets depuis racine projet
+- Fonctionnalités : Commencer par verbe d'action
+- Message final : Concis, pas de félicitations excessives
+
 ### Clarification (🔄)
+
+**⚠️ FORMAT EXACT À RESPECTER** :
 
 ```
 🔄 **Clarifications nécessaires**
 
 ❓ **Questions** :
-1. **[Catégorie]** : [Question ?]
+1. **[Catégorie technique]** : [Question précise se terminant par ?]
+   - Option A : [description avec implications]
+   - Option B : [description avec implications]
+
+2. **[Catégorie technique]** : [Question précise se terminant par ?]
    - Option A : [description]
    - Option B : [description]
 
 ---
-**Demande initiale** : [répéter]
+**Demande initiale** : [copier exactement la demande utilisateur]
 ```
 
+**Règles** :
+- 2-5 questions maximum
+- Catégories techniques uniquement (Architecture, Base de données, UI/UX, etc.)
+- Options avec implications claires
+- Répéter demande initiale textuellement
+
 ### Validation (✋)
+
+**⚠️ FORMAT EXACT À RESPECTER** :
 
 ```
 ✋ **Validation requise**
 
 📊 **Impact** :
-**Complexité** : [SIMPLE|MOYENNE|MAJEURE] ([durée])
-**Fichiers** : [X] fichiers ([nouveaux/modifiés])
-**Risques** : [NIVEAU] - [description]
-**Bénéfices** : [liste]
-**Plan** : [étapes]
+**Complexité** : [SIMPLE|MOYENNE|MAJEURE] ([durée en Xh Ymin])
+**Fichiers** : [X] fichiers ([N nouveaux + M modifiés])
+**Risques** : [CRITIQUE|ÉLEVÉ|MODÉRÉ|FAIBLE] - [description des risques spécifiques]
+**Bénéfices** :
+• [bénéfice 1 mesurable]
+• [bénéfice 2 mesurable]
+**Plan** :
+1. [étape 1 avec durée estimée]
+2. [étape 2 avec durée estimée]
 
 ❓ **Souhaitez-vous procéder ?**
 
 ---
-**Demande initiale** : [répéter]
+**Demande initiale** : [copier exactement la demande utilisateur]
 ```
+
+**Règles** :
+- Complexité : Un seul mot parmi SIMPLE/MOYENNE/MAJEURE
+- Risques : Niveau + description concrète
+- Bénéfices : Liste à puces, résultats mesurables
+- Plan : Étapes numérotées avec estimations
+- Répéter demande initiale textuellement
 
 ---
 
@@ -184,6 +226,7 @@ APPRENTISSAGE REQUIS :
 ## ✅ OBLIGATIONS
 
 - ✅ Afficher nom étape avant chaque étape
+- ✅ Afficher "✅ ÉTAPE X complétée" après chaque étape
 - ✅ Lire guides dans l'ordre
 - ✅ Archiver en ÉTAPE 7 (CRITIQUE)
 - ✅ Retourner message structuré APRÈS archivage

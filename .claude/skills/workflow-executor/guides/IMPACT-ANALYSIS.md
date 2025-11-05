@@ -95,3 +95,13 @@
 - Risque ÉLEVÉ/CRITIQUE
 
 → **VALIDATION OBLIGATOIRE** (lire VALIDATION.md)
+
+---
+
+## ⚠️ AVANT DE PASSER À L'ÉTAPE 3
+
+**Vérifie que tous les items de la CHECKLIST sont cochés** ✅
+
+- Classification claire (MINEUR/MODÉRÉ/MAJEUR)
+- Risques identifiés
+- Décision validation prise
