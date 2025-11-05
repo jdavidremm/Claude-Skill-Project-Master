@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "last_scan": null,
+  "folders": [],
+  "important_files": [],
+  "ignored_patterns": [
+    "node_modules",
+    "venv",
+    ".venv",
+    "__pycache__",
+    ".git",
+    ".pytest_cache",
+    "dist",
+    "build",
+    ".next",
+    ".nuxt",
+    "target",
+    ".idea",
+    ".vscode"
+  ]
+}

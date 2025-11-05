@@ -98,6 +98,9 @@ Contexte projet :
 ✅ system-state.md : 2 modules actifs (Todo App, Dashboard)
 ✅ Registres codebase : 5 chargés
 
+Structure projet :
+✅ 12 dossiers connus chargés (4 high, 8 medium)
+
 Capacités apprises :
 ✅ nicegui (frameworks)
 ✅ sqlalchemy (libraries)
@@ -113,10 +116,30 @@ Contexte projet :
 ✅ system-state.md : vide
 ✅ Registres codebase : 5 vides
 
+Structure projet :
+→ Aucun dossier enregistré (nouveau projet)
+
 Capacités apprises :
 → Aucune capacité disponible (nouveau projet)
 
 ✅ ÉTAPE 1 complétée
+```
+
+**Si nouveaux dossiers détectés** :
+```
+Structure projet :
+✅ 12 dossiers connus chargés
+⚠️ Nouveaux dossiers : /workers (aucun README)
+→ Ajouté temporairement au contexte
+```
+
+OU si README présent :
+```
+Structure projet :
+✅ 12 dossiers connus chargés
+✅ Nouveau dossier : /workers
+→ Détecté automatiquement : "Background job processing"
+→ Ajouté temporairement au contexte
 ```
 
 **Si capacités existent mais aucune ne match** :
@@ -274,6 +297,7 @@ Résumé : 2/8 complétées, 1 échec définitif
 Archivage contexte :
 ✅ tasks.md mis à jour
 ✅ system-state.md mis à jour
+✅ project-registry.json enrichi (2 nouveaux dossiers)
 
 Archivage registres codebase :
 ✅ structure.md (11 fichiers ajoutés)

@@ -73,6 +73,76 @@ Demande: "Crée une API REST avec FastAPI qui utilise SQLAlchemy et suit nos con
 - Capacités = Version légère (best_practices, common_patterns, execution_hints)
 - SI besoin détails exhaustifs → Read `documentation` field du JSON
 
+### 📁 Détection Structure Projet
+
+**Objectif** : Détecter nouveaux dossiers/fichiers créés par workflow OU utilisateur.
+
+#### Workflow de détection
+
+- [ ] Lire `project-registry.json`
+- [ ] Scanner filesystem : `find . -maxdepth 2 -type d`
+- [ ] Filtrer selon `ignored_patterns`
+- [ ] Diff : `nouveaux = actuels - registry.folders`
+- [ ] **SI nouveaux dossiers détectés** → Mode découverte
+- [ ] **SINON** → Charger selon `load_priority` et triggers
+
+#### Mode découverte (nouveaux dossiers)
+
+**Pour chaque nouveau dossier** :
+
+1. **Chercher README.md** dans le dossier
+   - Si présent → Parser première ligne/paragraphe pour `purpose`
+   - Extraire mots-clés pour `triggers`
+
+2. **Si aucun README** :
+   - Afficher : `⚠️ Nouveau dossier détecté : /workers (aucun README)`
+   - Afficher : `Workflow continue sans ce contexte. Enrichir manuellement project-registry.json si nécessaire.`
+   - Marquer `purpose: "unknown"` dans registry temporaire
+
+3. **Ajouter temporairement au contexte** (pour cette exécution)
+4. **Marquer pour archivage ÉTAPE 7**
+
+#### Chargement contexte connu
+
+**Pour dossiers dans registry** :
+
+- [ ] Matcher `triggers` avec demande utilisateur
+- [ ] Charger selon `load_priority` :
+  - `high` : Toujours charger
+  - `medium` : Si triggers matchent
+  - `low` : Seulement si mention explicite
+
+**Exemple - Chargement sélectif** :
+```
+Demande: "Ajoute une migration pour table users"
+
+Registry :
+- /migrations (triggers: ["database", "migration"]) → Match ✅
+- /api/routes (triggers: ["api", "endpoint"]) → Pas de match ❌
+- /tests (load_priority: "high") → Toujours chargé ✅
+
+Résultat : Charge /migrations + /tests seulement
+```
+
+#### Format d'affichage
+
+```
+Structure projet :
+✅ 12 dossiers connus chargés (4 high, 8 medium)
+⚠️ Nouveaux dossiers : /workers (aucun README)
+→ Ajouté temporairement au contexte
+```
+
+OU si README présent :
+
+```
+Structure projet :
+✅ 12 dossiers connus chargés
+✅ Nouveau dossier : /workers
+→ Détecté automatiquement : "Background job processing"
+→ Ajouté temporairement au contexte
+```
+
 ### Optionnel (Si Pertinent)
 
 - [ ] `.claude/context/improvements-log.md` → Améliorations récentes

@@ -80,6 +80,65 @@ Mettre à jour TOUS les fichiers de contexte après CHAQUE tâche. **OBLIGATOIRE
 
 ---
 
+### 2.5. project-registry.json (SI NOUVEAUX DOSSIERS)
+
+**Emplacement** : `.claude/skills/workflow-executor/project-registry.json`
+
+**Objectif** : Persister les nouveaux dossiers/fichiers dans le registry pour chargement automatique futurs workflows.
+
+#### Workflow d'enrichissement
+
+- [ ] **Si workflow a créé nouveaux dossiers/fichiers** :
+  - Ajouter à `project-registry.json`
+  - Remplir : `path`, `purpose`, `created_by: "workflow"`, `created_at`, `triggers`, `load_priority`, `files_pattern`
+
+- [ ] **Si ÉTAPE 1 a détecté nouveaux dossiers** :
+  - Enrichir métadonnées incomplètes (`purpose: "unknown"`)
+  - Si README détecté → Confirmer métadonnées parsées
+  - Si pas de README → Laisser `purpose: "unknown"` (utilisateur enrichira manuellement)
+
+- [ ] Mettre à jour `last_scan` timestamp
+
+#### Déterminer load_priority
+
+**Règles automatiques** :
+
+```
+high → Dossiers critiques : migrations, config, env
+medium → Dossiers fonctionnels : api, workers, services, models
+low → Dossiers auxiliaires : docs, scripts, utils, tests
+```
+
+**OU deviner selon triggers** :
+- `database, migration, schema` → high
+- `api, service, worker, model` → medium
+- `doc, script, util, test` → low
+
+#### Exemple - Workflow crée /workers
+
+```json
+{
+  "path": "workers",
+  "purpose": "Background job processing with Celery",
+  "created_by": "workflow",
+  "created_at": "2025-11-05",
+  "triggers": ["worker", "job", "background", "celery", "task"],
+  "load_priority": "medium",
+  "files_pattern": "*.py"
+}
+```
+
+#### Format d'affichage
+
+```
+Archivage :
+✅ tasks.md mis à jour
+✅ system-state.md mis à jour
+✅ project-registry.json enrichi (2 nouveaux dossiers)
+```
+
+---
+
 ### 3. error-patterns.md (SI ERREUR)
 
 **Emplacement** : `.claude/context/error-patterns.md`
