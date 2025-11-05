@@ -40,17 +40,12 @@ Avant chaque étape, affiche uniquement :
 ---
 ## ÉTAPE 1 : Context
 ---
-[charge les fichiers contexte...]
-
----
-## ÉTAPE 2 : Impact
----
-[analyse la complexité...]
+[travaille...]
 
 ---
 ## ÉTAPE 5 : Planifier
 ---
-[crée le plan avec sous-tâches...]
+[travaille...]
 ```
 
 ---
@@ -99,6 +94,27 @@ APPRENTISSAGE REQUIS :
 - Lire guides/VALIDATION.md
 - **SI impact MAJEUR** → Retourner **✋ Validation requise**
 - **SINON** → Continuer ÉTAPE 5
+
+### ÉTAPE 7 : Archiver ⭐ RAPPEL CRITIQUE
+
+**Après avoir lu ARCHIVING.md, TU DOIS OBLIGATOIREMENT :**
+
+1. ✅ Archiver `tasks.md` + `system-state.md`
+
+2. ⭐ **ARCHIVER LES 5 REGISTRES CODEBASE** (CRITIQUE) :
+   - `structure.md` + MAJ "Last updated"
+   - `database.md` + MAJ "Last updated"
+   - `api.md` + MAJ "Last updated"
+   - `components.md` + MAJ "Last updated"
+   - `dependencies.md` + MAJ "Last updated"
+
+3. ✅ Archiver `error-patterns.md` (si erreur rencontrée)
+
+4. ✅ Archiver `improvements-log.md` / `decisions-log.md` (si applicable)
+
+**❌ INTERDICTION ABSOLUE** : Terminer ÉTAPE 7 sans les 5 registres ⭐
+
+**Sans les registres → Le système perd sa mémoire !**
 
 ---
 

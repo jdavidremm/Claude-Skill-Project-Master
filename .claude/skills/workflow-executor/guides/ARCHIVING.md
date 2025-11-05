@@ -6,26 +6,37 @@ Mettre à jour TOUS les fichiers de contexte après CHAQUE tâche. **OBLIGATOIRE
 
 ---
 
-## ✅ CHECKLIST D'ARCHIVAGE
+## ✅ CHECKLIST D'ARCHIVAGE OBLIGATOIRE
 
-### Obligatoire (État du Projet)
+⚠️ **AVANT DE RETOURNER LE RÉSULTAT FINAL, VÉRIFIE CETTE CHECKLIST** ⚠️
 
-- [ ] `.claude/context/tasks.md` → Section "✅ Terminées" + statistiques
-- [ ] `.claude/context/system-state.md` → État + modules + métriques
+### 📋 Obligatoire (État du Projet)
 
-### ⭐ CRITIQUE (Registres Codebase - selon modifications)
+- [ ] **1.** `.claude/context/tasks.md` MIS À JOUR
+  - Section "✅ Terminées" + statistiques MAJ
 
-- [ ] `.claude/context/codebase/structure.md` + "Last updated" (si nouveaux dossiers)
-- [ ] `.claude/context/codebase/database.md` + "Last updated" (si nouveaux models)
-- [ ] `.claude/context/codebase/api.md` + "Last updated" (si nouvelles routes)
-- [ ] `.claude/context/codebase/components.md` + "Last updated" (si nouveaux composants)
-- [ ] `.claude/context/codebase/dependencies.md` + "Last updated" (si nouvelles deps)
+- [ ] **2.** `.claude/context/system-state.md` MIS À JOUR
+  - État + modules + métriques MAJ
 
-### Si Applicable
+### ⭐ CRITIQUE (Registres Codebase - OBLIGATOIRE selon modifications)
 
-- [ ] `.claude/context/error-patterns.md` (si erreur rencontrée)
-- [ ] `.claude/context/improvements-log.md` (si amélioration significative)
-- [ ] `.claude/context/decisions-log.md` (si décision technique)
+**⚠️ CES 5 REGISTRES SONT LE CŒUR DE LA MÉMOIRE DU SYSTÈME ⚠️**
+
+- [ ] **3.** `.claude/context/codebase/structure.md` + "Last updated" *(si nouveaux dossiers)*
+- [ ] **4.** `.claude/context/codebase/database.md` + "Last updated" *(si nouveaux models)*
+- [ ] **5.** `.claude/context/codebase/api.md` + "Last updated" *(si nouvelles routes)*
+- [ ] **6.** `.claude/context/codebase/components.md` + "Last updated" *(si nouveaux composants)*
+- [ ] **7.** `.claude/context/codebase/dependencies.md` + "Last updated" *(si nouvelles deps)*
+
+### 📝 Si Applicable
+
+- [ ] **8.** `.claude/context/error-patterns.md` *(si erreur rencontrée)*
+- [ ] **9.** `.claude/context/improvements-log.md` *(si amélioration significative)*
+- [ ] **10.** `.claude/context/decisions-log.md` *(si décision technique)*
+
+---
+
+**⚠️ SI UN SEUL ⭐ NON COCHÉ → ARCHIVAGE INCOMPLET → NE PAS RETOURNER LE RÉSULTAT**
 
 ---
 
@@ -205,8 +216,18 @@ File: `path/to/file`
 
 ---
 
-## ⚠️ VÉRIFICATION FINALE
+## ⚠️ VÉRIFICATION FINALE AVANT RETOUR
 
-**SI UN SEUL ITEM OBLIGATOIRE NON COCHÉ → ARCHIVAGE INCOMPLET → À REFAIRE**
+**CHECKLIST COMPLÈTE ?**
 
-**⚠️ REGISTRES CODEBASE SONT CRITIQUES** : Sans eux, perte de mémoire !
+✅ **OUI** → Items 1-2 cochés + Items 3-7 cochés (si modifications) → Retourner résultat final
+
+❌ **NON** → Un item ⭐ manquant → **NE PAS RETOURNER** → Compléter archivage
+
+---
+
+**⚠️ RAPPEL CRITIQUE ⚠️**
+
+Sans les 5 registres codebase (items 3-7), le système **PERD SA MÉMOIRE** et refera les mêmes erreurs !
+
+C'est LA partie la plus importante de l'archivage.
