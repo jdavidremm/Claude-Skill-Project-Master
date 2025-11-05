@@ -319,10 +319,11 @@ Capacités apprises :
 
 **SI "APPRENTISSAGE REQUIS :" présent** :
 1. Lire `capabilities/_registry.json`
-2. Créer/enrichir capacité dans `capabilities/[category]/[id].json`
-3. Mettre à jour `_registry.json`
-4. **⚠️ NE PAS charger en mémoire** (sera fait en ÉTAPE 1)
-5. Continuer ÉTAPE 1
+2. **Si dossier category n'existe pas** : Créer avec `mkdir -p capabilities/[category]`
+3. Créer/enrichir capacité dans `capabilities/[category]/[id].json`
+4. Mettre à jour `_registry.json`
+5. **⚠️ NE PAS charger en mémoire** (sera fait en ÉTAPE 1)
+6. Continuer ÉTAPE 1
 
 **Rôle de cette étape** :
 - 💾 **PERSISTENCE** : Écrire sur disque (création fichiers JSON)

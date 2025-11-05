@@ -35,13 +35,12 @@ User : "On utilise toujours cette structure de fichiers"
 capabilities/
 ├── _registry.json                    # Registre (VIDE au départ)
 ├── README.md                         # Ce fichier
-├── frameworks/                       # Docs frameworks (vide au départ)
-├── databases/                        # Docs databases (vide au départ)
-├── architectures/                    # Docs architectures (vide au départ)
-├── patterns/                         # Patterns (vide au départ)
-├── tools/                            # Docs outils (vide au départ)
-├── languages/                        # Docs langages (vide au départ)
-└── project-guidelines/               # Guidelines projet (vide au départ)
+├── frameworks/                       # Frameworks (React, NiceGUI, FastAPI, etc.)
+├── libraries/                        # Libraries (SQLAlchemy, Stripe, requests, etc.)
+├── patterns/                         # Design patterns, architecture patterns
+├── tools/                            # Outils (Docker, Git workflows, etc.)
+├── languages/                        # Langages (Python conventions, TypeScript, etc.)
+└── project-guidelines/               # Guidelines spécifiques au projet
 ```
 
 ## 🔄 Comment Enrichir project-master
@@ -406,7 +405,7 @@ Structure standard (JSON) :
   "id": "identifiant-unique",
   "name": "Nom Lisible",
   "version": "1.0.0",
-  "category": "frameworks|databases|project-guidelines|patterns|...",
+  "category": "frameworks|libraries|patterns|tools|languages|project-guidelines",
   "source": "user_provided|user_dictated|url|auto_learned",
   "added_date": "2025-11-04",
   "last_updated": "2025-11-04",
