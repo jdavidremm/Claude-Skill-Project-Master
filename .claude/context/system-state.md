@@ -4,23 +4,17 @@
 
 ### Modules Disponibles
 
-_Aucun module applicatif créé pour le moment_
-
-### Skills Disponibles
-
-- ✅ **skill-creator** (Fourni par défaut par Claude Code)
-- ✅ **project-master** (Créé le 2025-11-04)
+(Liste des modules applicatifs - À remplir)
 
 ### Technologies Utilisées
 
-- Claude Code CLI
-- Markdown pour documentation
-- YAML pour configuration
+(Liste des technologies - À remplir)
 
 ---
 
 ## 📊 Métriques Performance
 
-- **Skills créés** : 1
-- **Fichiers de guidance** : 9
-- **Fichiers de contexte** : 5
+- **Modules créés** : 0
+- **Pages totales** : 0
+- **Composants UI** : 0
+- **Tests unitaires** : 0
