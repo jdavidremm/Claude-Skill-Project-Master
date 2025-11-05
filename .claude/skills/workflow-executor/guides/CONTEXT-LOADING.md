@@ -38,6 +38,61 @@ Charger l'état actuel du projet pour comprendre où on en est avant de commence
    - Conventions de design
    - Composants disponibles
 
+## Charger la Codebase ⭐ NOUVEAU
+
+⚠️ **OBLIGATOIRE** : Toujours charger les registres de la codebase pour connaître l'état du projet.
+
+### Registres à Charger (ULTRA LÉGERS)
+
+7. **context/codebase/structure.md**
+   - Arborescence du projet
+   - Dossiers clés et leur rôle
+
+8. **context/codebase/database.md**
+   - Models/tables existants
+   - Relations entre models
+   - Fichiers sources
+
+9. **context/codebase/api.md**
+   - Routes API existantes
+   - Méthodes et endpoints
+   - Fichiers sources
+
+10. **context/codebase/components.md**
+    - Composants UI existants
+    - Purpose de chaque composant
+    - Fichiers sources
+
+11. **context/codebase/dependencies.md**
+    - Dépendances installées (backend + frontend)
+    - Versions et purposes
+    - Fichiers sources (package.json, requirements.txt)
+
+### Progressive Disclosure
+
+Les registres sont **ULTRA LÉGERS** (juste références + info clé).
+
+**SI besoin de détails complets** :
+1. Parser la demande utilisateur
+2. Identifier fichiers pertinents dans les registres
+3. Read fichiers spécifiques pour détails complets
+
+**Exemple** :
+```
+Demande: "Ajoute endpoint pour archiver un todo"
+→ Registre api.md indique : routes existantes dans `api/todos.py`
+→ SI besoin détails: Read `api/todos.py` pour voir pattern exact
+→ Registre database.md indique : model Todo dans `models/Todo.py`
+→ SI besoin détails: Read `models/Todo.py` pour voir tous les champs
+```
+
+### Pourquoi Charger la Codebase ?
+
+✅ **Éviter doublons** : Ne pas recréer ce qui existe
+✅ **Cohérence** : Respecter patterns et structure existants
+✅ **Réutilisation** : Identifier composants/models réutilisables
+✅ **Performance** : Registres ultra-légers, Read seulement si besoin
+
 ## Détection d'Interruption
 
 Vérifie dans `tasks.md` si une tâche est marquée comme "⏸️ En cours" :

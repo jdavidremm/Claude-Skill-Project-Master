@@ -197,19 +197,211 @@ Structure adoptée avec succès, tests passent, UI cohérente.
 
 ---
 
+### 6. Registres Codebase ⭐ CRITIQUE (OBLIGATOIRE)
+
+**Emplacement** : `.claude/context/codebase/`
+
+⚠️ **CETTE SECTION EST LE CŒUR DE LA MÉMOIRE DU PROJET**
+
+Les registres codebase DOIVENT être mis à jour **SYSTÉMATIQUEMENT** après chaque modification.
+Sans ces mises à jour, le système perd sa mémoire et refera les mêmes erreurs.
+
+#### 6.1. structure.md
+
+**Quand mettre à jour** :
+- Nouveaux dossiers créés
+- Changement d'arborescence
+- Nouveaux types de fichiers
+
+**Actions** :
+1. MAJ section "## Root" avec nouvelle arborescence
+2. MAJ section "## Key Directories" avec nouveaux dossiers
+3. MAJ "Last updated" avec date du jour
+
+**Template strict à respecter** :
+```markdown
+## Key Directories
+- `dir/` - Description courte
+```
+
+---
+
+#### 6.2. database.md
+
+**Quand mettre à jour** :
+- Nouveaux models créés
+- Nouvelles tables ajoutées
+- Nouvelles relations entre models
+
+**Actions** :
+1. Ajouter nouveau model avec template strict
+2. MAJ "Last updated" avec date du jour
+
+**Template strict à respecter** :
+```markdown
+### ModelName
+File: `path/to/file`
+Table: `table_name`
+Relations: → OtherModel (foreign_key)
+Key fields: field1, field2, field3
+```
+
+**Exemple** :
+```markdown
+### Todo
+File: `models/Todo.py`
+Table: `todos`
+Relations: → User (user_id)
+Key fields: id, user_id, title, completed, created_at
+```
+
+---
+
+#### 6.3. api.md
+
+**Quand mettre à jour** :
+- Nouvelles routes API créées
+- Modification d'endpoints existants
+- Nouveaux fichiers de routes
+
+**Actions** :
+1. Ajouter routes avec template strict
+2. MAJ "Last updated" avec date du jour
+
+**Template strict à respecter** :
+```markdown
+## ResourceName
+File: `path/to/file`
+- METHOD /path - Description courte
+```
+
+**Exemple** :
+```markdown
+## Todos
+File: `api/todos.py`
+- GET /api/todos - List all todos
+- POST /api/todos - Create new todo
+- PATCH /api/todos/:id - Update todo
+- PATCH /api/todos/:id/archive - Archive todo
+- DELETE /api/todos/:id - Delete todo
+```
+
+---
+
+#### 6.4. components.md
+
+**Quand mettre à jour** :
+- Nouveaux composants UI créés
+- Modification de composants existants
+
+**Actions** :
+1. Ajouter composant avec template strict
+2. Organiser par catégorie
+3. MAJ "Last updated" avec date du jour
+
+**Template strict à respecter** :
+```markdown
+## CategoryName
+File: `path/to/file`
+Purpose: Description courte
+```
+
+**Exemple** :
+```markdown
+## Todo Components
+File: `components/TodoList.tsx`
+Purpose: Display list of todos with filters
+
+File: `components/TodoItem.tsx`
+Purpose: Single todo item with checkbox and delete
+```
+
+---
+
+#### 6.5. dependencies.md
+
+**Quand mettre à jour** :
+- Nouvelles dépendances installées
+- MAJ versions de dépendances
+
+**Actions** :
+1. Ajouter package avec template strict
+2. Organiser par stack (Backend, Frontend, etc.)
+3. MAJ "Last updated" avec date du jour
+
+**Template strict à respecter** :
+```markdown
+## Stack Name (Language)
+File: `path/to/file`
+- package version - Purpose courte
+```
+
+**Exemple** :
+```markdown
+## Backend (Python)
+File: `requirements.txt`
+- fastapi 0.104.1 - Web framework
+- sqlalchemy 2.0.23 - ORM database
+- pydantic 2.5.0 - Data validation
+```
+
+---
+
+### ⚠️ Règles Critiques pour les Registres
+
+1. **TOUJOURS respecter le template strict**
+   - Ne pas inventer de nouveaux formats
+   - Template visible en haut de chaque fichier
+
+2. **TOUJOURS mettre à jour "Last updated"**
+   - Format : `Last updated: YYYY-MM-DD`
+   - À chaque modification du fichier
+
+3. **Rester ULTRA LÉGER**
+   - Pas de détails exhaustifs
+   - Juste nom + fichier + info clé
+   - Les détails sont dans les fichiers sources (Read si besoin)
+
+4. **Pas de doublons**
+   - Ne pas dupliquer info existante ailleurs
+   - Registres = références, pas documentation complète
+
+5. **Si erreur lors de la MAJ d'un registre**
+   - Logger dans error-patterns.md
+   - Continuer avec les autres registres
+   - Mentionner dans message final
+
+---
+
 ## Checklist d'Archivage
 
 Avant de retourner le résultat final à Claude, **VÉRIFIER** :
 
+### État du Projet (Obligatoire)
+
 - [ ] `tasks.md` mis à jour avec la tâche terminée
 - [ ] `tasks.md` statistiques mises à jour
-- [ ] `error-patterns.md` mis à jour (si erreur rencontrée)
 - [ ] `system-state.md` mis à jour avec nouveaux modules
 - [ ] `system-state.md` métriques mises à jour
+
+### Registres Codebase ⭐ CRITIQUE (Obligatoire selon modifications)
+
+- [ ] `codebase/structure.md` mis à jour (si nouveaux dossiers)
+- [ ] `codebase/database.md` mis à jour (si nouveaux models/tables)
+- [ ] `codebase/api.md` mis à jour (si nouvelles routes API)
+- [ ] `codebase/components.md` mis à jour (si nouveaux composants)
+- [ ] `codebase/dependencies.md` mis à jour (si nouvelles dépendances)
+- [ ] "Last updated" mis à jour dans CHAQUE registre modifié
+
+### Erreurs et Décisions (Si applicable)
+
+- [ ] `error-patterns.md` mis à jour (si erreur rencontrée)
 - [ ] `improvements-log.md` mis à jour (si amélioration)
 - [ ] `decisions-log.md` mis à jour (si décision technique)
 
-**SI UN SEUL ITEM N'EST PAS COCHÉ → ARCHIVAGE INCOMPLET → À REFAIRE**
+**⚠️ SI UN SEUL ITEM OBLIGATOIRE N'EST PAS COCHÉ → ARCHIVAGE INCOMPLET → À REFAIRE**
+
+**⚠️ LES REGISTRES CODEBASE SONT CRITIQUES** : Sans eux, le système perd sa mémoire !
 
 ## Format de Retour
 
