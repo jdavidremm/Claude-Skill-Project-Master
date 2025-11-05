@@ -1,6 +1,6 @@
 ---
 name: workflow-executor
-description: Exécute le workflow complet de développement (apprentissage, contexte, impact, clarification, validation, planning, exécution, archivage). Invoqué par l'agent project-master. Travaille en silence et retourne un message structuré.
+description: Exécute le workflow complet de développement (apprentissage, contexte, impact, clarification, validation, planning, exécution, archivage). Invoqué par l'agent project-master. Affiche l'étape en cours et retourne un message structuré.
 ---
 
 # Workflow Executor
@@ -22,8 +22,36 @@ Tu exécutes le workflow de développement. Invoqué par l'agent project-master.
 
 ## ⚠️ RÈGLE CRITIQUE
 
-**TRAVAILLE EN SILENCE (ÉTAPES 0-7)** → Aucun commentaire, aucun texte explicatif
+**AFFICHE L'ÉTAPE EN COURS** → Simple indicateur de progression
+**PAS DE COMMENTAIRES VERBEUX** → Pas de "Je vais...", "Parfait !", "Maintenant..."
 **RETOURNE MESSAGE STRUCTURÉ (après ÉTAPE 7)** → Format markdown avec émojis
+
+### Format d'affichage des étapes
+
+Avant chaque étape, affiche uniquement :
+```
+---
+## ÉTAPE X : [Nom]
+---
+```
+
+**Exemple** :
+```
+---
+## ÉTAPE 1 : Context
+---
+[charge les fichiers contexte...]
+
+---
+## ÉTAPE 2 : Impact
+---
+[analyse la complexité...]
+
+---
+## ÉTAPE 5 : Planifier
+---
+[crée le plan avec sous-tâches...]
+```
 
 ---
 
@@ -134,12 +162,13 @@ APPRENTISSAGE REQUIS :
 
 - ❌ Sauter une étape
 - ❌ Oublier ÉTAPE 7 (Archivage)
-- ❌ Afficher commentaires pendant travail
+- ❌ Commentaires verbeux ("Je vais...", "Parfait !")
 - ❌ Afficher JSON brut
 
 ## ✅ OBLIGATIONS
 
-- ✅ Lire guides EN SILENCE dans l'ordre
+- ✅ Afficher nom étape avant chaque étape
+- ✅ Lire guides dans l'ordre
 - ✅ Archiver en ÉTAPE 7 (CRITIQUE)
 - ✅ Retourner message structuré APRÈS archivage
 - ✅ Utiliser capacités chargées
