@@ -100,21 +100,46 @@ APPRENTISSAGE REQUIS :
 
 ### ÉTAPE 3 : Clarifier les requirements (si nécessaire)
 
-- Lire `.claude/skills/workflow-executor/guides/REQUIREMENTS-CLARIFIER.md` (EN SILENCE)
-- Identifier les ambiguïtés
-- **SI ambiguïtés** → Retourner questions à l'agent en langage naturel clair
-- **SINON** → Passer à ÉTAPE 4 en silence
+⚠️ **D'ABORD : Vérifier si "PRÉCISIONS UTILISATEUR" est présent dans la demande**
+
+**SI "PRÉCISIONS UTILISATEUR" est présent** :
+1. Lire les précisions fournies (EN SILENCE)
+2. Parser et intégrer les réponses aux questions précédentes (EN SILENCE)
+3. Valider que toutes les ambiguïtés sont résolues (EN SILENCE)
+4. **SI toutes les ambiguïtés résolues** : Passer à ÉTAPE 4 directement (EN SILENCE)
+5. **SI des ambiguïtés persistent** : Retourner questions manquantes avec marqueur 🔄
+
+**SINON (pas de précisions)** :
+1. Lire `.claude/skills/workflow-executor/guides/REQUIREMENTS-CLARIFIER.md` (EN SILENCE)
+2. Identifier les ambiguïtés dans la demande (EN SILENCE)
+3. **SI ambiguïtés détectées** :
+   - Retourner questions avec marqueur **🔄 Clarifications nécessaires**
+   - Utiliser le format décrit dans REQUIREMENTS-CLARIFIER.md
+   - INCLURE "Demande initiale:" à la fin du message
+4. **SINON** : Passer à ÉTAPE 4 (EN SILENCE)
 
 ⚠️ **AUCUN message affiché** sauf si clarification nécessaire.
 
 ### ÉTAPE 4 : Validation utilisateur (si changement majeur)
 
-- Lire `.claude/skills/workflow-executor/guides/VALIDATION.md` (EN SILENCE)
-- **SI impact = MAJEUR** :
-  - Préparer rapport d'impact complet
-  - Retourner rapport à l'agent pour validation utilisateur
-  - ATTENDRE que l'agent te dise de continuer
-- **SINON** : Passer à ÉTAPE 5 en silence
+⚠️ **D'ABORD : Vérifier si "VALIDATION UTILISATEUR" est présent dans la demande**
+
+**SI "VALIDATION UTILISATEUR: Approuvé"** :
+- Passer à ÉTAPE 5 directement (EN SILENCE)
+
+**SI "VALIDATION UTILISATEUR: Approuvé avec modifications"** :
+1. Lire les modifications demandées (EN SILENCE)
+2. Intégrer les modifications au plan (EN SILENCE)
+3. Passer à ÉTAPE 5 (EN SILENCE)
+
+**SINON (pas de validation)** :
+1. Lire `.claude/skills/workflow-executor/guides/VALIDATION.md` (EN SILENCE)
+2. Évaluer l'impact du changement (EN SILENCE)
+3. **SI impact = MAJEUR** :
+   - Retourner rapport avec marqueur **✋ Validation requise**
+   - Utiliser le format décrit dans VALIDATION.md
+   - INCLURE "Demande initiale:" à la fin du message
+4. **SINON** : Passer à ÉTAPE 5 (EN SILENCE)
 
 ⚠️ **AUCUN message affiché** sauf si validation nécessaire.
 

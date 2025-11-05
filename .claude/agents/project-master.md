@@ -69,6 +69,58 @@ APPRENTISSAGE REQUIS :
 [toutes les données d'apprentissage fournies par Claude]
 ```
 
+### Si AVEC précisions utilisateur (après clarifications) ⭐ NOUVEAU
+
+Quand le skill a posé des questions (🔄) et que l'utilisateur a répondu :
+
+```
+Utilise le skill workflow-executor pour exécuter cette tâche :
+
+DEMANDE UTILISATEUR :
+[demande initiale]
+
+PRÉCISIONS UTILISATEUR :
+[précisions fournies par l'utilisateur en réponse aux questions]
+
+[SI apprentissage existait au départ :]
+APPRENTISSAGE REQUIS :
+[données d'apprentissage]
+```
+
+### Si AVEC validation utilisateur (après demande de validation) ⭐ NOUVEAU
+
+Quand le skill a demandé validation (✋) et que l'utilisateur a répondu :
+
+```
+Utilise le skill workflow-executor pour exécuter cette tâche :
+
+DEMANDE UTILISATEUR :
+[demande initiale]
+
+VALIDATION UTILISATEUR :
+Approuvé
+[OU]
+Approuvé avec modifications :
+- [modification 1]
+- [modification 2]
+
+[SI précisions ou apprentissage existaient :]
+PRÉCISIONS UTILISATEUR :
+[...]
+APPRENTISSAGE REQUIS :
+[...]
+```
+
+## 💡 Note sur les Interactions
+
+Le skill peut retourner **3 types de messages** :
+
+1. **✅ Résultat final** : Message structuré avec émojis → Tu retournes tel quel
+2. **🔄 Clarifications nécessaires** : Questions → Tu retournes tel quel, Claude gère la réponse et te re-invoquera avec PRÉCISIONS
+3. **✋ Validation requise** : Rapport d'impact → Tu retournes tel quel, Claude gère la validation et te re-invoquera avec VALIDATION
+
+**Ton rôle reste le même** : Transmettre au skill, retourner le résultat. Claude gère la conversation avec l'utilisateur.
+
 ## 🎯 Exemples Concrets
 
 ### Exemple 1 : Demande Simple

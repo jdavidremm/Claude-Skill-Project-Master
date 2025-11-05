@@ -104,6 +104,140 @@ L'agent retourne déjà un message structuré en langage naturel avec émojis. T
 ✅ **TOUJOURS inclure données d'apprentissage si extraites**
 ✅ **TOUJOURS afficher résultat tel quel**
 
+## 🔄 Gestion des Clarifications et Validations
+
+L'agent peut ne PAS retourner de résultat final, mais **poser des questions** ou **demander une validation**.
+
+### Détecter si l'agent pose des questions (Clarifications)
+
+**SI** le message retourné par l'agent commence par **"🔄 Clarifications nécessaires"** :
+
+1. ✅ C'est une demande de clarification, **PAS un résultat final**
+2. ✅ **Affiche le message TEL QUEL** à l'utilisateur
+3. ✅ **Attend la réponse** de l'utilisateur
+4. ✅ **Quand l'utilisateur répond** :
+
+   a) **Extrait la "Demande initiale"** du message de clarifications précédent
+
+   b) **Parse la réponse** de l'utilisateur
+
+   c) **Structure comme** :
+   ```
+   Utilise l'agent project-master pour :
+
+   DEMANDE UTILISATEUR :
+   [demande initiale extraite du message précédent]
+
+   PRÉCISIONS UTILISATEUR :
+   - [précision 1 extraite de la réponse]
+   - [précision 2 extraite de la réponse]
+
+   [SI apprentissage existait: inclure APPRENTISSAGE REQUIS]
+   ```
+
+   d) **RE-délègue** à l'agent project-master
+
+### Détecter si l'agent demande validation
+
+**SI** le message retourné par l'agent commence par **"✋ Validation requise"** :
+
+1. ✅ C'est une demande de validation, **PAS un résultat final**
+2. ✅ **Affiche le rapport** tel quel à l'utilisateur
+3. ✅ **Attend confirmation** utilisateur
+4. ✅ **Quand l'utilisateur répond** :
+
+   a) **SI "Oui" / "Vas-y" / "OK"** :
+   ```
+   Utilise l'agent project-master pour :
+
+   DEMANDE UTILISATEUR :
+   [demande initiale extraite du message précédent]
+
+   VALIDATION UTILISATEUR :
+   Approuvé
+
+   [Précisions et apprentissage si présents]
+   ```
+
+   b) **SI modifications demandées** ("Oui mais fais X au lieu de Y") :
+   ```
+   Utilise l'agent project-master pour :
+
+   DEMANDE UTILISATEUR :
+   [demande initiale extraite du message précédent]
+
+   VALIDATION UTILISATEUR :
+   Approuvé avec modifications :
+   - [modification 1]
+   - [modification 2]
+
+   [Précisions et apprentissage si présents]
+   ```
+
+   c) **RE-délègue** à l'agent project-master
+
+### Flux Visuel : Clarifications
+
+```
+User: "Créé app todo avec BDD"
+  ↓
+Claude délègue
+  ↓
+Agent retourne: "🔄 Clarifications nécessaires
+                 ❓ 1. Base de données: Quel type ?
+                    a) SQLite b) PostgreSQL c) MongoDB
+                 ---
+                 Demande initiale: Créé app todo avec BDD"
+  ↓
+Claude affiche tel quel
+  ↓
+User: "PostgreSQL avec auth par utilisateur"
+  ↓
+Claude extrait:
+  - Demande initiale = "Créé app todo avec BDD"
+  - Précisions = "- Base de données: PostgreSQL
+                  - Authentification: Oui, par utilisateur"
+  ↓
+Claude RE-délègue:
+  "DEMANDE UTILISATEUR: Créé app todo avec BDD
+   PRÉCISIONS UTILISATEUR:
+   - Base de données: PostgreSQL
+   - Authentification: Oui, par utilisateur"
+  ↓
+Agent exécute → Résultat final
+```
+
+### Flux Visuel : Validation
+
+```
+User: "Migre vers React 19"
+  ↓
+Claude délègue
+  ↓
+Agent retourne: "✋ Validation requise
+                 📊 Impact: MAJEUR (20h)
+                 Fichiers: 25 fichiers
+                 Risques: Breaking changes, hooks...
+                 Plan: 1. Backup 2. Migrate 3. Test
+                 ❓ Souhaitez-vous procéder ?
+                 ---
+                 Demande initiale: Migre vers React 19"
+  ↓
+Claude affiche tel quel
+  ↓
+User: "Oui vas-y"
+  ↓
+Claude extrait:
+  - Demande initiale = "Migre vers React 19"
+  - Validation = "Approuvé"
+  ↓
+Claude RE-délègue:
+  "DEMANDE UTILISATEUR: Migre vers React 19
+   VALIDATION UTILISATEUR: Approuvé"
+  ↓
+Agent exécute → Résultat final
+```
+
 ## 📋 Exemples Complets
 
 ### Exemple 1 : Demande Simple (Sans Documentation)

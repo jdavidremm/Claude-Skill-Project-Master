@@ -90,67 +90,154 @@ Identifier les ambiguïtés dans la demande utilisateur et poser les bonnes ques
 4️⃣ Y a-t-il des fonctionnalités prioritaires à optimiser ?
 ```
 
-## Format de Retour
+## 📤 Format de Retour des Questions
 
-⚠️ **IMPORTANT** : NE JAMAIS afficher ces formats directement à l'utilisateur !
-→ Claude les transformera en dialogue naturel avec choix interactifs.
+⚠️ **TOUJOURS utiliser ce format avec le marqueur 🔄**
 
 ### Si clarification nécessaire
 
-```json
-{
-  "status": "needs_clarification",
-  "impact": {
-    "classification": "MINEUR|MODÉRÉ|MAJEUR",
-    "estimated_time": "Estimation approximative",
-    "files_affected": 0,
-    "validation_required": false
-  },
-  "questions": [
-    {
-      "question": "Que veux-tu améliorer exactement dans le module de facturation ?",
-      "context": "Cela m'aidera à créer un plan précis et adapté à tes besoins",
-      "suggestions": [
-        "Performance (vitesse d'exécution)",
-        "Fonctionnalités (nouvelles features)",
-        "Interface utilisateur (UX/UI)",
-        "Code (refactoring, maintenabilité)"
-      ],
-      "allow_custom": true
-    },
-    {
-      "question": "Y a-t-il un problème spécifique que tu veux résoudre ?",
-      "context": "Cela m'aidera à prioriser les actions",
-      "suggestions": [
-        "Oui, je vais expliquer",
-        "Non, amélioration générale"
-      ],
-      "allow_custom": true
-    },
-    {
-      "question": "Y a-t-il des contraintes à respecter ?",
-      "context": "Temps, compatibilité, budget technique, etc.",
-      "suggestions": [
-        "Aucune contrainte particulière",
-        "Contraintes de temps (urgent)",
-        "Compatibilité avec version existante",
-        "Limité en ressources"
-      ],
-      "allow_custom": true
-    }
-  ]
-}
-```
+```markdown
+🔄 **Clarifications nécessaires**
 
-**→ Claude utilisera AskUserQuestion pour créer des choix interactifs**
+❓ **Questions** :
+
+1. **[Catégorie]** : [Question claire et précise ?]
+   - Option A : [description avec contexte]
+   - Option B : [description avec contexte]
+   - Option C : [description avec contexte]
+   [- Option D : optionnel]
+
+2. **[Catégorie]** : [Question claire et précise ?]
+   - Option A : [description avec contexte]
+   - Option B : [description avec contexte]
+
+[Ajouter autant de questions que nécessaire]
+
+---
+**Demande initiale** : [répéter exactement la demande utilisateur]
+```
 
 ### Si clarification non nécessaire
 
-```json
-{
-  "status": "requirements_clear",
-  "summary": "Créer module Effectifs complet avec CRUD, models, UI, tests"
-}
+Ne rien retourner, passer directement à ÉTAPE 4 en silence.
+
+## 📋 Exemples de Questions par Type
+
+### Choix technologique
+
+```markdown
+1. **Base de données** : Quel type de base de données souhaitez-vous utiliser ?
+   - SQLite : Local, pas de serveur, simple (idéal pour prototypes/petits projets)
+   - PostgreSQL : Robuste, production-ready, relations complexes
+   - MongoDB : NoSQL, flexible, bon pour données non structurées
+   - MySQL : Classique, bien documenté, largement supporté
 ```
 
-**→ Claude continuera directement vers l'analyse d'impact**
+### Architecture
+
+```markdown
+2. **Architecture** : Quelle structure d'application préférez-vous ?
+   - Monolithe : Tout dans un seul projet (simple, démarrage rapide)
+   - Microservices : Services séparés (scalable, mais plus complexe)
+   - Serverless : Functions cloud (pay-as-you-go, maintenance minimale)
+```
+
+### Authentification
+
+```markdown
+3. **Authentification** : Les données sont-elles par utilisateur ?
+   - Oui : Chaque utilisateur a ses propres données (besoin système d'auth)
+   - Non : Données globales partagées par tous
+```
+
+### Fonctionnalités ambiguës
+
+```markdown
+4. **Amélioration du module** : Que voulez-vous améliorer exactement ?
+   - Performance : Optimiser vitesse d'exécution et requêtes
+   - Fonctionnalités : Ajouter de nouvelles features
+   - Interface : Améliorer UX/UI
+   - Code : Refactoring pour maintenabilité
+```
+
+### Portée du travail
+
+```markdown
+5. **Portée** : Quel niveau de changement envisagez-vous ?
+   - Minimal : Correction/ajout simple sans impact architectural
+   - Modéré : Modification avec quelques fichiers impactés
+   - Complet : Refonte majeure du module
+```
+
+## 🎯 Exemple Complet
+
+### Demande : "Créé une app todo avec BDD"
+
+**Retour du skill** :
+
+```markdown
+🔄 **Clarifications nécessaires**
+
+❓ **Questions** :
+
+1. **Base de données** : Quel type de base de données souhaitez-vous utiliser ?
+   - SQLite : Local, fichier unique, parfait pour débuter et petits projets
+   - PostgreSQL : Production-ready, robuste, supporte relations complexes
+   - MongoDB : NoSQL, flexible, idéal pour structure de données évolutive
+
+2. **Authentification** : Les todos sont-ils par utilisateur ?
+   - Oui : Chaque utilisateur a ses propres todos (nécessite système d'auth complet)
+   - Non : Todos globaux partagés par tous les utilisateurs
+
+3. **Interface** : Quel type d'interface souhaitez-vous ?
+   - Web (React/Vue) : Application web moderne dans le navigateur
+   - Desktop (NiceGUI/Electron) : Application bureau native
+   - CLI : Interface en ligne de commande
+   - API uniquement : Pas d'interface, juste l'API backend
+
+---
+**Demande initiale** : Créé une app todo avec BDD
+```
+
+### Demande : "Optimise les performances"
+
+**Retour du skill** :
+
+```markdown
+🔄 **Clarifications nécessaires**
+
+❓ **Questions** :
+
+1. **Quelle partie est lente** : Où constatez-vous des problèmes de performance ?
+   - Chargement initial : Page met du temps à s'afficher au démarrage
+   - Requêtes BD : Opérations de lecture/écriture lentes
+   - Calculs : Traitement de données ou algorithmes lents
+   - Rendu UI : Interface qui lag lors des interactions
+
+2. **Objectif** : Quel niveau d'optimisation visez-vous ?
+   - Rapide : Gains "quick wins" faciles à implémenter (< 2h)
+   - Complet : Optimisation profonde avec refactoring si nécessaire (> 4h)
+
+3. **Métriques** : Avez-vous des métriques actuelles ?
+   - Oui : [Précisez temps de chargement, requêtes/sec, etc.]
+   - Non : Je constate juste que c'est lent
+
+---
+**Demande initiale** : Optimise les performances
+```
+
+## ⚠️ Règles Critiques
+
+### ✅ TOUJOURS
+- ✅ Utiliser le marqueur **🔄 Clarifications nécessaires**
+- ✅ Poser des questions **claires et précises**
+- ✅ Fournir **options avec contexte** (pourquoi choisir A vs B ?)
+- ✅ Répéter la **demande initiale** à la fin
+- ✅ Limiter à **3-5 questions max** (éviter overload)
+
+### ❌ JAMAIS
+- ❌ Retourner du JSON brut (utiliser markdown lisible)
+- ❌ Poser des questions vagues ("Que veux-tu faire ?")
+- ❌ Donner trop d'options (max 4-5 par question)
+- ❌ Oublier le contexte des options
+- ❌ Oublier de répéter la demande initiale
