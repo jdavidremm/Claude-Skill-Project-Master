@@ -2,54 +2,47 @@
 
 ## Objectif
 
-Diagnostiquer et corriger les erreurs de manière systématique, avec enregistrement des patterns pour apprentissage futur.
+Diagnostiquer et corriger erreurs systématiquement. Max 3 tentatives. Enregistrer patterns.
 
-## Patterns d'Erreurs Connus
+---
+
+## ✅ CHECKLIST
+
+- [ ] 1. Identifier type erreur
+- [ ] 2. Vérifier pattern connu dans error-patterns.md
+- [ ] 3. Appliquer solution (tentative 1/3)
+- [ ] 4. Valider correction (`py_compile` + tests)
+- [ ] 5. Si échec → Réessayer (max 3 tentatives)
+- [ ] 6. Si échec définitif → Enregistrer pattern + RETOURNER à Claude
+
+---
+
+## 🔍 Patterns d'Erreurs Communs
 
 ### ERR-001 : ImportError - Module/Attribute Non Trouvé
 
-**Symptôme** :
-```
-ImportError: cannot import name 'Employe' from 'database.models.effectifs'
-```
+**Symptôme** : `ImportError: cannot import name 'X' from 'module'`
 
-**Causes Communes** :
-1. Classe non définie dans le module
-2. Typo dans le nom de la classe
+**Causes** :
+1. Classe non définie dans module
+2. Typo dans nom classe
 3. Import circulaire
 
 **Solutions** :
-1. Vérifier que la classe existe dans le fichier
-2. Vérifier l'orthographe exacte
-3. Vérifier l'ordre des imports
-
-**Commandes de Diagnostic** :
-```bash
-# Vérifier le contenu du module
-grep -n "class Employe" database/models/effectifs.py
-
-# Vérifier les imports du fichier
-head -20 database/models/effectifs.py
-```
+1. Vérifier classe existe : `grep -n "class X" fichier.py`
+2. Vérifier orthographe
+3. Réorganiser imports
 
 ---
 
 ### ERR-002 : AttributeError - datetime.timedelta
 
-**Symptôme** :
-```
-AttributeError: type object 'datetime.datetime' has no attribute 'timedelta'
-```
+**Symptôme** : `AttributeError: 'datetime' has no attribute 'timedelta'`
 
-**Cause** :
-Import incorrect : `from datetime import datetime` puis utilisation de `datetime.timedelta`
+**Cause** : Import incorrect
 
 **Solution** :
 ```python
-# ❌ Incorrect
-from datetime import datetime
-delta = datetime.timedelta(days=1)
-
 # ✅ Correct
 from datetime import datetime, timedelta
 delta = timedelta(days=1)
@@ -59,206 +52,111 @@ delta = timedelta(days=1)
 
 ### ERR-003 : NameError - Variable Non Définie
 
-**Symptôme** :
-```
-NameError: name 'SessionLocal' is not defined
-```
+**Symptôme** : `NameError: name 'X' is not defined`
 
-**Cause** :
-Import manquant
+**Cause** : Import manquant
 
-**Solution** :
-```python
-# Ajouter l'import
-from database.initialisation import SessionLocal
-```
+**Solution** : Ajouter import manquant
 
 ---
 
 ### ERR-004 : SyntaxError
 
-**Symptôme** :
-```
-SyntaxError: invalid syntax at line X
-```
+**Symptôme** : `SyntaxError: invalid syntax at line X`
 
-**Causes Communes** :
+**Causes** :
 1. Parenthèse/crochet non fermé
 2. Indentation incorrecte
 3. Virgule manquante
 
-**Diagnostic** :
-```bash
-python -m py_compile fichier.py
-```
+**Diagnostic** : `python -m py_compile fichier.py`
 
 ---
 
 ### ERR-005 : Alembic Migration Failed
 
-**Symptôme** :
-```
-alembic.util.exc.CommandError: Target database is not up to date
-```
-
-**Causes** :
-1. Migration non appliquée
-2. Conflit de versions
+**Symptôme** : `Target database is not up to date`
 
 **Solutions** :
 ```bash
-# Vérifier l'état actuel
-alembic current
-
-# Appliquer les migrations
-alembic upgrade head
-
-# Si conflit, créer une nouvelle migration
-alembic revision --autogenerate -m "fix_migration_conflict"
+alembic current          # Vérifier état
+alembic upgrade head     # Appliquer migrations
 ```
 
 ---
 
-## Processus de Correction
+## 🔧 Processus de Correction
 
 ### 1. Diagnostic
 
-**Étape 1 : Identifier le type d'erreur**
+**a) Identifier type erreur**
 - ImportError → ERR-001
 - AttributeError → ERR-002
 - NameError → ERR-003
 - SyntaxError → ERR-004
 - Autre → Diagnostic manuel
 
-**Étape 2 : Vérifier le pattern connu**
+**b) Vérifier pattern connu**
 - Lire `.claude/context/error-patterns.md`
-- Chercher le pattern ID correspondant
-- Appliquer la solution documentée
+- Chercher pattern ID correspondant
+- Appliquer solution documentée
 
-**Étape 3 : Si pattern inconnu**
-- Analyser le message d'erreur
-- Identifier la cause racine
-- Formuler une solution
+**c) Si pattern inconnu**
+- Analyser message erreur
+- Identifier cause racine
+- Formuler solution
 
 ### 2. Application de la Correction
 
-**Tentative 1** :
-```json
-{
-  "attempt": 1,
-  "error": "ImportError: cannot import name 'Employe'",
-  "diagnosis": "Classe non définie dans le module",
-  "fix_to_apply": "Vérifier et ajouter la classe Employe dans database/models/effectifs.py"
-}
-```
-
-Appliquer la correction, puis vérifier :
-```bash
-python -m py_compile fichier.py
-```
-
-**Tentative 2** (si échec) :
-```json
-{
-  "attempt": 2,
-  "error": "Même erreur",
-  "diagnosis": "Import circulaire possible",
-  "fix_to_apply": "Réorganiser les imports, déplacer import à la fin"
-}
-```
-
-**Tentative 3** (si échec) :
-```json
-{
-  "attempt": 3,
-  "error": "Même erreur",
-  "diagnosis": "Problème structurel",
-  "fix_to_apply": "Refactoring de la structure du module"
-}
-```
+**Pour chaque tentative (max 3)** :
+1. Appliquer correction
+2. Vérifier syntaxe : `python -m py_compile fichier.py`
+3. Lancer tests (si applicable)
+4. Si succès → Continuer
+5. Si échec → Réessayer avec nouvelle approche
 
 ### 3. Si Échec Définitif (3 tentatives)
 
-```json
-{
-  "status": "error_unresolved",
-  "error": {
-    "type": "ImportError",
-    "message": "cannot import name 'Employe' from 'database.models.effectifs'",
-    "attempts": 3,
-    "fixes_tried": [
-      "Ajout de la classe Employe",
-      "Réorganisation des imports",
-      "Refactoring de la structure"
-    ]
-  },
-  "action": "Enregistrer nouveau pattern, RETOURNER à Claude"
-}
-```
-
-**Enregistrer le pattern** dans `.claude/context/error-patterns.md` :
-
+**a) Enregistrer pattern** dans `.claude/context/error-patterns.md` :
 ```yaml
 - id: ERR-XXX
-  type: ImportError
-  symptom: "cannot import name 'Employe' from 'database.models.effectifs'"
-  context: "Création de nouveau module avec modèles SQLAlchemy"
-  root_cause: "..."
-  solution: "..."
+  type: [ErrorType]
+  symptom: "[message]"
+  context: "[contexte]"
+  root_cause: "[cause]"
+  solution: "[tentées]"
   status: unresolved
-  reported_date: 2025-11-04
+  reported_date: YYYY-MM-DD
 ```
 
-## Commandes de Diagnostic Utiles
+**b) RETOURNER à Claude**
+- Message d'erreur complet
+- 3 fixes tentés
+- Pattern enregistré
+
+---
+
+## 🛠️ Commandes Diagnostic
 
 ```bash
-# Vérifier syntaxe Python
+# Vérifier syntaxe
 python -m py_compile fichier.py
 
-# Lancer les tests
-pytest tests/test_xxx.py -v
-
-# Vérifier imports
+# Tester imports
 python -c "from module import Class"
 
-# Vérifier structure BDD
+# Lancer tests
+pytest tests/test_xxx.py -v
+
+# Vérifier BDD
 alembic current
-alembic history
-
-# Chercher un pattern
-grep -r "pattern" .claude/context/error-patterns.md
 ```
 
-## Format de Retour
+---
 
-### Correction Réussie
+## ⚠️ RÈGLES
 
-```json
-{
-  "status": "error_fixed",
-  "error": {
-    "type": "ImportError",
-    "original_message": "..."
-  },
-  "fix_applied": "Ajout de 'from datetime import timedelta'",
-  "pattern_id": "ERR-002",
-  "attempt": 1,
-  "tests_passed": true
-}
-```
-
-### Échec Définitif
-
-```json
-{
-  "status": "error_unresolved",
-  "error": {
-    "type": "ImportError",
-    "message": "...",
-    "attempts": 3,
-    "pattern_id": "ERR-XXX (nouveau)",
-    "registered": true
-  },
-  "action": "RETOURNER à Claude avec rapport complet"
-}
-```
+- ✅ Max 3 tentatives par erreur
+- ✅ Toujours enregistrer pattern si échec définitif
+- ✅ Valider correction avec `py_compile` + tests
+- ❌ Ne pas continuer si 3 échecs (RETOURNER à Claude)
