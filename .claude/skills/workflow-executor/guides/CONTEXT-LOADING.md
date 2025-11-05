@@ -2,166 +2,64 @@
 
 ## Objectif
 
-Charger l'état actuel du projet pour comprendre où on en est avant de commencer une nouvelle tâche.
+Charger l'état actuel du projet avant de commencer une nouvelle tâche.
 
-## Fichiers à Charger
+---
 
-### Obligatoires
+## ✅ CHECKLIST DE CHARGEMENT
 
-1. **context/tasks.md**
-   - Liste des tâches terminées, en cours, en attente
-   - Dernière tâche effectuée
-   - Statistiques globales
+### Obligatoire (État du Projet)
 
-2. **context/system-state.md**
-   - État actuel de l'application
-   - Modules disponibles
-   - Skills/agents créés
-   - Technologies utilisées
+- [ ] `.claude/context/tasks.md` → Tâches terminées/en cours/en attente
+- [ ] `.claude/context/system-state.md` → État actuel, modules, technologies
+- [ ] `.claude/context/error-patterns.md` → Erreurs connues à éviter
 
-3. **context/error-patterns.md**
-   - Patterns d'erreurs connus
-   - Solutions documentées
-   - Erreurs récurrentes à éviter
+### ⭐ OBLIGATOIRE (Registres Codebase - ULTRA LÉGERS)
 
-### Optionnels (selon besoin)
+- [ ] `.claude/context/codebase/structure.md` → Arborescence + dossiers clés
+- [ ] `.claude/context/codebase/database.md` → Models/tables + relations
+- [ ] `.claude/context/codebase/api.md` → Routes API + endpoints
+- [ ] `.claude/context/codebase/components.md` → Composants UI + purpose
+- [ ] `.claude/context/codebase/dependencies.md` → Dépendances + versions
 
-4. **context/improvements-log.md**
-   - Améliorations récentes
-   - Impact des changements
+### Optionnel (Si Pertinent)
 
-5. **context/decisions-log.md**
-   - Décisions techniques passées
-   - Justifications
+- [ ] `.claude/context/improvements-log.md` → Améliorations récentes
+- [ ] `.claude/context/decisions-log.md` → Décisions techniques passées
+- [ ] `.claude/context/design-system.md` → Conventions de design
 
-6. **context/design-system.md**
-   - Conventions de design
-   - Composants disponibles
+---
 
-## Charger la Codebase ⭐ NOUVEAU
+## 🔍 Progressive Disclosure
 
-⚠️ **OBLIGATOIRE** : Toujours charger les registres de la codebase pour connaître l'état du projet.
-
-### Registres à Charger (ULTRA LÉGERS)
-
-7. **context/codebase/structure.md**
-   - Arborescence du projet
-   - Dossiers clés et leur rôle
-
-8. **context/codebase/database.md**
-   - Models/tables existants
-   - Relations entre models
-   - Fichiers sources
-
-9. **context/codebase/api.md**
-   - Routes API existantes
-   - Méthodes et endpoints
-   - Fichiers sources
-
-10. **context/codebase/components.md**
-    - Composants UI existants
-    - Purpose de chaque composant
-    - Fichiers sources
-
-11. **context/codebase/dependencies.md**
-    - Dépendances installées (backend + frontend)
-    - Versions et purposes
-    - Fichiers sources (package.json, requirements.txt)
-
-### Progressive Disclosure
-
-Les registres sont **ULTRA LÉGERS** (juste références + info clé).
+Les registres sont **ULTRA LÉGERS** (références + info clé seulement).
 
 **SI besoin de détails complets** :
-1. Parser la demande utilisateur
-2. Identifier fichiers pertinents dans les registres
-3. Read fichiers spécifiques pour détails complets
+1. Parser demande utilisateur
+2. Identifier fichiers pertinents dans registres
+3. Read fichiers spécifiques pour détails
 
 **Exemple** :
 ```
 Demande: "Ajoute endpoint pour archiver un todo"
-→ Registre api.md indique : routes existantes dans `api/todos.py`
-→ SI besoin détails: Read `api/todos.py` pour voir pattern exact
-→ Registre database.md indique : model Todo dans `models/Todo.py`
-→ SI besoin détails: Read `models/Todo.py` pour voir tous les champs
+→ api.md indique routes dans `api/todos.py`
+→ SI besoin: Read `api/todos.py` pour pattern exact
+→ database.md indique model `models/Todo.py`
+→ SI besoin: Read `models/Todo.py` pour champs
 ```
 
-### Pourquoi Charger la Codebase ?
+---
+
+## 🎯 Pourquoi Charger la Codebase ?
 
 ✅ **Éviter doublons** : Ne pas recréer ce qui existe
 ✅ **Cohérence** : Respecter patterns et structure existants
 ✅ **Réutilisation** : Identifier composants/models réutilisables
-✅ **Performance** : Registres ultra-légers, Read seulement si besoin
+✅ **Performance** : Registres légers, Read seulement si besoin
 
-## Détection d'Interruption
+---
 
-Vérifie dans `tasks.md` si une tâche est marquée comme "⏸️ En cours" :
+## ⏸️ Détection d'Interruption
 
-```yaml
-status: in_progress
-started_at: 2025-11-04T14:30:00
-subtasks:
-  - name: "Créer models"
-    status: completed
-  - name: "Créer UI"
-    status: in_progress  # ← INTERRUPTION DÉTECTÉE
-  - name: "Tests"
-    status: pending
-```
-
-Si interruption détectée :
-- Charger les détails de la tâche interrompue
-- Identifier ce qui a été complété
-- Identifier ce qui reste à faire
-- RETOURNER à Claude pour proposer reprise à l'utilisateur
-
-## Format de Retour
-
-```json
-{
-  "context_loaded": true,
-  "interruption_detected": false,
-  "project_state": {
-    "last_task": "Création Module Budget",
-    "last_task_date": "2025-11-04",
-    "modules": {
-      "authentification": "completed",
-      "budget": "completed",
-      "effectifs": "not_started",
-      "vehicules": "not_started"
-    },
-    "skills_available": ["nicegui-doc"],
-    "recent_errors": []
-  }
-}
-```
-
-Si interruption :
-
-```json
-{
-  "context_loaded": true,
-  "interruption_detected": true,
-  "interrupted_task": {
-    "name": "Création Module Stock",
-    "started_at": "2025-11-04T14:30:00",
-    "progress": "2/4 sous-tâches (50%)",
-    "completed": ["Créer models", "Créer queries"],
-    "in_progress": "Créer UI (fichier créé mais pas validé)",
-    "pending": ["Tests"]
-  }
-}
-```
-
-## Commandes Bash Utiles
-
-```bash
-# Lister tous les fichiers context/
-ls .claude/context/
-
-# Lire tasks.md
-cat .claude/context/tasks.md
-
-# Chercher tâches en cours
-grep -A 10 "status: in_progress" .claude/context/tasks.md
-```
+Vérifie dans `tasks.md` si tâche marquée "⏸️ En cours" :
+- Si interruption → Charger détails + Retourner à Claude pour proposition reprise

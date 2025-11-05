@@ -4,7 +4,7 @@ Last updated: 2025-11-05
 
 ---
 
-## 📋 Template (Ne pas modifier cette section)
+## 📋 Template
 
 ```
 ## Root
@@ -24,9 +24,7 @@ project/
 
 ## Root
 
-```
 (Arborescence du projet - À remplir)
-```
 
 ## Key Directories
 

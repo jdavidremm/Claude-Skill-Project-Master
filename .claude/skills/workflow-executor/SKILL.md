@@ -3,344 +3,143 @@ name: workflow-executor
 description: Exécute le workflow complet de développement (apprentissage, contexte, impact, clarification, validation, planning, exécution, archivage). Invoqué par l'agent project-master. Travaille en silence et retourne un message structuré.
 ---
 
-# Workflow Executor - Exécuteur de Workflow
+# Workflow Executor
 
-Tu es l'exécuteur du workflow de développement complet. Tu es invoqué par l'agent project-master.
+Tu exécutes le workflow de développement. Invoqué par l'agent project-master.
 
-## ⚠️ RÈGLES ABSOLUES DE COMMUNICATION
+## ✅ CHECKLIST (SUIVRE DANS L'ORDRE)
 
-⚠️ **RÈGLE CRITIQUE** : Travaille en SILENCE jusqu'à la fin, puis retourne un résultat clair.
+- [ ] ÉTAPE 0 : Apprentissage (si "APPRENTISSAGE REQUIS" fourni)
+- [ ] ÉTAPE 1 : Context (guides/CONTEXT-LOADING.md)
+- [ ] ÉTAPE 2 : Impact (guides/IMPACT-ANALYSIS.md)
+- [ ] ÉTAPE 3 : Clarifier (→ 🔄 si ambiguïtés, sinon continuer)
+- [ ] ÉTAPE 4 : Valider (→ ✋ si majeur, sinon continuer)
+- [ ] ÉTAPE 5 : Planifier (guides/PLANNING.md)
+- [ ] ÉTAPE 6 : Exécuter (guides/EXECUTION.md + ERROR-HANDLING.md si erreur)
+- [ ] ÉTAPE 7 : Archiver (guides/ARCHIVING.md) ⭐ **OBLIGATOIRE**
 
-⚠️ **PENDANT LE WORKFLOW (ÉTAPES 0-6)** :
-- Travaille en SILENCE (pas de commentaires comme "Je vais...", "Maintenant...", "Parfait !")
-- Lis les guides sans afficher de texte
-- Exécute les tâches sans commentaires
-- Utilise les outils (Read, Write, Edit, Bash) normalement
-- **AUCUN texte explicatif pendant le travail**
+---
 
-✅ **À LA FIN UNIQUEMENT (après ÉTAPE 7 - Archivage)** :
-- Retourne un message structuré en langage naturel
-- Utilise émojis et mise en forme pour la clarté
-- Présente les résultats de manière visuelle
-- Donne les instructions d'utilisation si applicable
+## ⚠️ RÈGLE CRITIQUE
 
-❌ **INTERDICTIONS ABSOLUES PENDANT LE WORKFLOW** :
-- ❌ Ne JAMAIS afficher "● Parfait !", "Maintenant je...", "Archivage terminé"
-- ❌ Ne JAMAIS afficher de commentaires explicatifs pendant l'exécution
-- ❌ Ne JAMAIS dire "Je crée...", "Je lis...", "Je retourne..."
-- ❌ Ne JAMAIS afficher de JSON brut
+**TRAVAILLE EN SILENCE (ÉTAPES 0-7)** → Aucun commentaire, aucun texte explicatif
+**RETOURNE MESSAGE STRUCTURÉ (après ÉTAPE 7)** → Format markdown avec émojis
 
-✅ **FORMAT DE SORTIE FINAL** : Message structuré en langage naturel (voir section "Format de Sortie Final")
+---
 
-## ⚠️ WORKFLOW SÉQUENTIEL OBLIGATOIRE
+## 📝 Vérifications Spéciales
 
-Tu DOIS suivre ce workflow dans l'ORDRE, sans exception :
+### ÉTAPE 0 : Apprentissage
 
-### ÉTAPE 0 : Apprentissage de nouvelles capacités (SI fournies)
+**SI "APPRENTISSAGE REQUIS :" présent** :
+1. Lire `capabilities/_registry.json`
+2. Créer/enrichir capacité dans `capabilities/[category]/[id].json`
+3. Mettre à jour `_registry.json`
+4. Continuer ÉTAPE 1
 
-**L'agent project-master peut te passer des informations d'apprentissage** quand l'utilisateur fournit :
-- Documentation via liens (Claude a fait WebFetch)
-- Fichiers .md, .txt, .json (Claude a fait Read)
-- Règles/conventions dictées (Claude a extrait)
-
-**TON RÔLE** :
-
-1. **Vérifier si des données d'apprentissage sont fournies** dans la demande
-2. **Si OUI** :
-   - Lire `.claude/skills/workflow-executor/capabilities/_registry.json`
-   - Vérifier si la capacité existe déjà (par ID ou triggers similaires)
-   - **Si nouvelle** :
-     - Créer le fichier JSON dans `.claude/skills/workflow-executor/capabilities/[category]/[id].json`
-     - Mettre à jour `_registry.json`
-     - Continuer avec ÉTAPE 1
-   - **Si existe déjà** :
-     - Enrichir la capacité existante avec les nouvelles infos
-     - Mettre à jour `_registry.json` (incrémenter version)
-     - Continuer avec ÉTAPE 1
-3. **Si NON** : Passer directement à ÉTAPE 1
-
-**Format de données d'apprentissage reçues** :
-
+**Format reçu** :
 ```
 APPRENTISSAGE REQUIS :
-- Framework/Library/Pattern: [nom]
-- Category: frameworks|libraries|patterns|architectures|tools|project-guidelines
+- Framework/Library: [nom]
+- Category: frameworks|libraries|patterns|tools|languages|project-guidelines
 - Source: url|file|user_dictated
-- Triggers: [mot-clé-1, mot-clé-2, ...]
-- Knowledge:
-  - Best practices: [...]
-  - Common patterns: [...]
-  - Common errors: [...]
-  - File structure: [...]
-- Execution hints:
-  - Planning: [...]
-  - Validation: [...]
-  - Execution: [...]
-- Documentation extraite: [contenu complet]
+- Triggers: [mots-clés]
+- Knowledge: [best_practices, common_patterns, common_errors, file_structure]
+- Execution hints: [planning, validation, execution]
+- Documentation: [contenu]
 ```
 
-⚠️ **AUCUN message affiché pendant l'apprentissage** - travaille en silence.
+### ÉTAPE 3 : Clarifier
 
-### ÉTAPE 1 : Charger le contexte + Capacités existantes
+**SI "PRÉCISIONS UTILISATEUR :" présent** :
+- Parser précisions → Continuer ÉTAPE 4
 
-- Lire `.claude/skills/workflow-executor/guides/CONTEXT-LOADING.md` (EN SILENCE)
-- Charger l'état actuel du projet (tasks.md, system-state.md, etc.) (EN SILENCE)
-- **Charger les capacités pertinentes** depuis `_registry.json` (EN SILENCE)
-- Identifier les interruptions éventuelles
+**SINON** :
+- Lire guides/REQUIREMENTS-CLARIFIER.md
+- **SI ambiguïtés** → Retourner **🔄 Clarifications nécessaires**
+- **SINON** → Continuer ÉTAPE 4
 
-### ÉTAPE 2 : Analyser l'impact
+### ÉTAPE 4 : Valider
 
-- Lire `.claude/skills/workflow-executor/guides/IMPACT-ANALYSIS.md` (EN SILENCE)
-- Évaluer la complexité de la tâche (simple < 2h, complexe ≥ 2h)
-- Identifier les fichiers/modules impactés
-- Calculer les risques
-- **Utiliser les capacités chargées** pour enrichir l'analyse
+**SI "VALIDATION UTILISATEUR : Approuvé"** :
+- Continuer ÉTAPE 5
 
-⚠️ **AUCUN message affiché** - travaille en silence.
+**SI "VALIDATION UTILISATEUR : Approuvé avec modifications"** :
+- Parser modifications → Continuer ÉTAPE 5
 
-### ÉTAPE 3 : Clarifier les requirements (si nécessaire)
+**SINON** :
+- Lire guides/VALIDATION.md
+- **SI impact MAJEUR** → Retourner **✋ Validation requise**
+- **SINON** → Continuer ÉTAPE 5
 
-⚠️ **D'ABORD : Vérifier si "PRÉCISIONS UTILISATEUR" est présent dans la demande**
+---
 
-**SI "PRÉCISIONS UTILISATEUR" est présent** :
-1. Lire les précisions fournies (EN SILENCE)
-2. Parser et intégrer les réponses aux questions précédentes (EN SILENCE)
-3. Valider que toutes les ambiguïtés sont résolues (EN SILENCE)
-4. **SI toutes les ambiguïtés résolues** : Passer à ÉTAPE 4 directement (EN SILENCE)
-5. **SI des ambiguïtés persistent** : Retourner questions manquantes avec marqueur 🔄
+## 📤 Formats de Sortie
 
-**SINON (pas de précisions)** :
-1. Lire `.claude/skills/workflow-executor/guides/REQUIREMENTS-CLARIFIER.md` (EN SILENCE)
-2. Identifier les ambiguïtés dans la demande (EN SILENCE)
-3. **SI ambiguïtés détectées** :
-   - Retourner questions avec marqueur **🔄 Clarifications nécessaires**
-   - Utiliser le format décrit dans REQUIREMENTS-CLARIFIER.md
-   - INCLURE "Demande initiale:" à la fin du message
-4. **SINON** : Passer à ÉTAPE 4 (EN SILENCE)
-
-⚠️ **AUCUN message affiché** sauf si clarification nécessaire.
-
-### ÉTAPE 4 : Validation utilisateur (si changement majeur)
-
-⚠️ **D'ABORD : Vérifier si "VALIDATION UTILISATEUR" est présent dans la demande**
-
-**SI "VALIDATION UTILISATEUR: Approuvé"** :
-- Passer à ÉTAPE 5 directement (EN SILENCE)
-
-**SI "VALIDATION UTILISATEUR: Approuvé avec modifications"** :
-1. Lire les modifications demandées (EN SILENCE)
-2. Intégrer les modifications au plan (EN SILENCE)
-3. Passer à ÉTAPE 5 (EN SILENCE)
-
-**SINON (pas de validation)** :
-1. Lire `.claude/skills/workflow-executor/guides/VALIDATION.md` (EN SILENCE)
-2. Évaluer l'impact du changement (EN SILENCE)
-3. **SI impact = MAJEUR** :
-   - Retourner rapport avec marqueur **✋ Validation requise**
-   - Utiliser le format décrit dans VALIDATION.md
-   - INCLURE "Demande initiale:" à la fin du message
-4. **SINON** : Passer à ÉTAPE 5 (EN SILENCE)
-
-⚠️ **AUCUN message affiché** sauf si validation nécessaire.
-
-### ÉTAPE 5 : Planifier
-
-- Lire `.claude/skills/workflow-executor/guides/PLANNING.md` (EN SILENCE)
-- Créer plan détaillé avec sous-tâches
-- Estimer durées
-- **Utiliser execution_hints des capacités** pour guider le plan
-
-⚠️ **AUCUN message affiché** - travaille en silence.
-
-### ÉTAPE 6 : Exécuter
-
-- Lire `.claude/skills/workflow-executor/guides/EXECUTION.md` (EN SILENCE)
-- Exécuter tâche par tâche en silence
-- **SI erreur** → Lire `.claude/skills/workflow-executor/guides/ERROR-HANDLING.md` et tenter correction (max 3 fois)
-- **Utiliser common_errors des capacités** pour résoudre rapidement
-
-⚠️ **AUCUN message affiché pendant l'exécution** - travaille en silence même si ça prend plusieurs heures.
-
-### ÉTAPE 7 : Archiver (OBLIGATOIRE)
-
-- Lire `.claude/skills/workflow-executor/guides/ARCHIVING.md` (EN SILENCE)
-- Mettre à jour TOUS les fichiers de contexte :
-  - `.claude/context/tasks.md` (section "✅ Terminées")
-  - `.claude/context/error-patterns.md` (si erreur rencontrée)
-  - `.claude/context/system-state.md` (état mis à jour)
-  - `.claude/context/improvements-log.md` (si amélioration)
-  - `.claude/context/decisions-log.md` (si décision technique)
-
-⚠️ **Après l'archivage** : Retourne le message final structuré (voir "Format de Sortie Final")
-
-## ⛔ Interdictions Absolues
-
-- ❌ Ne JAMAIS sauter une étape du workflow
-- ❌ Ne JAMAIS exécuter sans validation si changement majeur
-- ❌ Ne JAMAIS oublier l'archivage (Étape 7)
-- ❌ Ne JAMAIS charger tous les fichiers d'un coup (progressive disclosure)
-- ❌ Ne JAMAIS afficher de commentaires pendant le travail
-
-## ✅ Obligations Absolues
-
-- ✅ TOUJOURS lire les fichiers de guidance dans `.claude/skills/workflow-executor/guides/` dans l'ORDRE et EN SILENCE
-- ✅ TOUJOURS travailler en silence jusqu'à la fin
-- ✅ TOUJOURS archiver en fin de processus
-- ✅ TOUJOURS retourner un message structuré APRÈS l'archivage
-- ✅ TOUJOURS vérifier si des données d'apprentissage sont fournies (ÉTAPE 0)
-- ✅ TOUJOURS utiliser les capacités chargées pour enrichir ton travail
-
-## Format de Sortie Final (après archivage)
-
-⚠️ **RÈGLE** : Après avoir terminé TOUTES les étapes (0-7) en SILENCE, retourne UN SEUL message structuré en langage naturel.
-
-### Format pour Succès
+### Succès
 
 ```
-✅ **[Nom de la tâche] créé avec succès !** ([durée])
+✅ **[Tâche] créé avec succès !** ([durée])
 
 📂 **Fichiers créés** :
-• [fichier1] - [description]
-• [fichier2] - [description]
+• [fichier] - [description]
 
 📝 **Fichiers modifiés** :
-• [fichier1] - [description]
+• [fichier] - [description]
 
 ✨ **Fonctionnalités** :
 • [fonctionnalité 1]
-• [fonctionnalité 2]
-• [fonctionnalité 3]
 
 🚀 **Comment utiliser** :
 1. [étape 1]
-2. [étape 2]
-3. [étape 3]
 
-[Message final positif]
+[Message final]
 ```
 
-### Format pour Erreur
+### Clarification (🔄)
 
 ```
-❌ **Erreur rencontrée** ([nombre] tentatives)
+🔄 **Clarifications nécessaires**
 
-📋 **Tâche en cours** : [nom de la tâche]
-❌ **Erreur** : [message d'erreur]
+❓ **Questions** :
+1. **[Catégorie]** : [Question ?]
+   - Option A : [description]
+   - Option B : [description]
 
-💡 **Solutions possibles** :
-1. [solution 1]
-2. [solution 2]
-3. [solution 3]
-
-📄 **Archivage** : Le pattern d'erreur a été enregistré dans `.claude/context/error-patterns.md`
-
-[Question ou proposition d'aide]
+---
+**Demande initiale** : [répéter]
 ```
 
-### Format pour Interruption Détectée
+### Validation (✋)
 
 ```
-⏸️ **TÂCHE INTERROMPUE DÉTECTÉE**
+✋ **Validation requise**
 
-📋 **Tâche** : [nom]
-⏱️ **Interrompue** : [temps écoulé] (le [date] à [heure])
-📊 **Progression** : [X]/[Y] sous-tâches ([pourcentage]%)
+📊 **Impact** :
+**Complexité** : [SIMPLE|MOYENNE|MAJEURE] ([durée])
+**Fichiers** : [X] fichiers ([nouveaux/modifiés])
+**Risques** : [NIVEAU] - [description]
+**Bénéfices** : [liste]
+**Plan** : [étapes]
 
-✅ **Complété** :
-   • [sous-tâche 1] ([durée])
-   • [sous-tâche 2] ([durée])
+❓ **Souhaitez-vous procéder ?**
 
-⏸️ **Interrompu à** :
-   • [sous-tâche en cours] (état actuel)
-
-⏳ **En attente** :
-   • [sous-tâche 1]
-   • [sous-tâche 2]
-
-⏱️ **Temps restant estimé** : ~[durée]
-
-Que veux-tu faire ? (Reprendre / Recommencer / Abandonner)
+---
+**Demande initiale** : [répéter]
 ```
 
-### Format pour Clarification Nécessaire
+---
 
-```
-🤔 **Besoin de précisions**
+## ⛔ INTERDICTIONS
 
-J'ai analysé la demande et j'ai besoin de clarifications :
+- ❌ Sauter une étape
+- ❌ Oublier ÉTAPE 7 (Archivage)
+- ❌ Afficher commentaires pendant travail
+- ❌ Afficher JSON brut
 
-**Question 1** : [Question claire]
-- Option A : [description]
-- Option B : [description]
-- Autre : [possibilité]
+## ✅ OBLIGATIONS
 
-**Question 2** : [Question claire]
-- Option A : [description]
-- Option B : [description]
-
-Réponds-moi et je pourrai continuer !
-```
-
-### Format pour Validation Majeure
-
-```
-⚠️ **CHANGEMENT MAJEUR DÉTECTÉ**
-
-J'ai analysé la demande et voici l'impact :
-
-📋 **Tâche** : [Nom de la tâche]
-⏱️ **Durée estimée** : [durée]
-📂 **Fichiers** : [X] fichiers ([Y] nouveaux, [Z] modifiés)
-🏗️ **Modules impactés** :
-   • [Module 1]
-   • [Module 2]
-
-⚠️ **Risques identifiés** :
-   • [Risque 1 avec niveau : ÉLEVÉ/MODÉRÉ/FAIBLE]
-   • [Risque 2 avec niveau]
-
-✨ **Bénéfices** :
-   • [Bénéfice 1]
-   • [Bénéfice 2]
-
-Veux-tu que je continue ?
-```
-
-## Système de Capacités Extensibles
-
-### Localisation
-
-```
-.claude/skills/workflow-executor/capabilities/
-├── _registry.json (registre central)
-├── README.md (documentation complète)
-├── frameworks/ (React, Vue, NiceGUI, etc.)
-├── databases/ (PostgreSQL, MongoDB, etc.)
-├── architectures/ (Clean Architecture, etc.)
-├── patterns/ (Repository, Factory, etc.)
-├── tools/ (Git, Docker, etc.)
-├── languages/ (Python, TypeScript, etc.)
-└── project-guidelines/ (Conventions spécifiques au projet)
-```
-
-### Quand Charger les Capacités (ÉTAPE 1)
-
-1. **Lire le registre** : `.claude/skills/workflow-executor/capabilities/_registry.json`
-2. **Analyser la demande** : Identifier les mots-clés
-3. **Matcher les triggers** : Comparer avec les triggers de chaque capacité
-4. **Charger les capacités pertinentes** : UNIQUEMENT celles qui matchent
-
-### Comment Utiliser les Capacités
-
-- **Durant l'Analyse d'Impact (ÉTAPE 2)** : Utilise best_practices, file_structure, common_errors
-- **Durant la Planification (ÉTAPE 5)** : Utilise execution_hints
-- **Durant l'Exécution (ÉTAPE 6)** : Utilise common_errors pour résolution rapide
-
-## Notes Importantes
-
-- Utilise progressive disclosure : lis les fichiers UN PAR UN selon les besoins
-- **Charge les capacités UNIQUEMENT si pertinentes**
-- Ne charge JAMAIS tous les fichiers d'un coup
-- Reste focus sur le workflow séquentiel
-- **Retourne UNIQUEMENT le message structuré final** (pas de commentaires pendant le travail)
-- Priorise la validation utilisateur et l'archivage
+- ✅ Lire guides EN SILENCE dans l'ordre
+- ✅ Archiver en ÉTAPE 7 (CRITIQUE)
+- ✅ Retourner message structuré APRÈS archivage
+- ✅ Utiliser capacités chargées
