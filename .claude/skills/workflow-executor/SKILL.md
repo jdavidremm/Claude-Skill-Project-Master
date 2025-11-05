@@ -59,6 +59,260 @@ Tu exécutes le workflow de développement. Invoqué par l'agent project-master.
 
 ---
 
+## 📊 Format d'Affichage par Étape
+
+**Principe** : Affichage **factuel et concis** (pas verbeux).
+
+### ÉTAPE 0 : Apprentissage
+
+```
+---
+## ÉTAPE 0 : Apprentissage
+---
+
+Nouvelle capacité créée :
+✅ nicegui (frameworks)
+  → Triggers: nicegui, nice gui, ui.button, @ui.page
+  → Source: https://nicegui.io/documentation
+
+✅ ÉTAPE 0 complétée
+```
+
+**Si enrichissement** :
+```
+Capacité enrichie :
+✅ react (frameworks) - Ajout de React 19 patterns
+```
+
+---
+
+### ÉTAPE 1 : Context
+
+```
+---
+## ÉTAPE 1 : Context
+---
+
+Contexte projet :
+✅ tasks.md : 3 tâches complétées, 1 en cours
+✅ system-state.md : 2 modules actifs (Todo App, Dashboard)
+✅ Registres codebase : 5 chargés
+
+Capacités apprises :
+✅ nicegui (frameworks)
+✅ sqlalchemy (libraries)
+→ 2 capacités actives
+
+✅ ÉTAPE 1 complétée
+```
+
+**Si nouveau projet** :
+```
+Contexte projet :
+✅ tasks.md : vide (nouveau projet)
+✅ system-state.md : vide
+✅ Registres codebase : 5 vides
+
+Capacités apprises :
+→ Aucune capacité disponible (nouveau projet)
+
+✅ ÉTAPE 1 complétée
+```
+
+**Si capacités existent mais aucune ne match** :
+```
+Capacités apprises :
+→ 3 disponibles, 0 match la demande actuelle
+```
+
+---
+
+### ÉTAPE 2 : Impact
+
+```
+---
+## ÉTAPE 2 : Impact
+---
+
+Analyse :
+• Durée estimée : 7h
+• Fichiers impactés : 9 (6 nouveaux, 3 modifiés)
+• Modules : Nouveau module complet
+• Risque : MODÉRÉ
+→ Classification : MAJEUR
+
+✅ ÉTAPE 2 complétée
+```
+
+**Si MINEUR** :
+```
+Analyse :
+• Durée estimée : 30min
+• Fichiers impactés : 1
+• Risque : FAIBLE
+→ Classification : MINEUR (pas de validation)
+
+✅ ÉTAPE 2 complétée
+```
+
+---
+
+### ÉTAPE 3 : Clarifier
+
+**Si clarifications nécessaires** :
+```
+---
+## ÉTAPE 3 : Clarifier
+---
+
+Ambiguïtés détectées :
+• Persistance données : Mémoire, fichier ou BDD ?
+• Fonctionnalités : Basique, intermédiaire ou avancé ?
+→ Retourne 🔄 Clarifications
+
+✅ ÉTAPE 3 complétée
+```
+
+**Si aucune ambiguïté** :
+```
+---
+## ÉTAPE 3 : Clarifier
+---
+
+Demande claire → Aucune clarification nécessaire
+
+✅ ÉTAPE 3 complétée
+```
+
+---
+
+### ÉTAPE 4 : Valider
+
+**Si validation nécessaire** :
+```
+---
+## ÉTAPE 4 : Valider
+---
+
+Impact MAJEUR détecté
+→ Retourne ✋ Validation requise
+
+✅ ÉTAPE 4 complétée
+```
+
+**Si pas de validation** :
+```
+---
+## ÉTAPE 4 : Valider
+---
+
+Impact MINEUR → Pas de validation nécessaire
+
+✅ ÉTAPE 4 complétée
+```
+
+---
+
+### ÉTAPE 5 : Planifier
+
+```
+---
+## ÉTAPE 5 : Planifier
+---
+
+Plan créé :
+• 8 sous-tâches
+• Durée totale : 7h 12min (6h + 20% marge)
+• Dépendances identifiées
+• 3 tâches parallélisables
+
+✅ ÉTAPE 5 complétée
+```
+
+---
+
+### ÉTAPE 6 : Exécuter
+
+```
+---
+## ÉTAPE 6 : Exécuter
+---
+
+[1/8] Configuration projet... ✅ (28min)
+[2/8] Modèle SQLite Todo... ✅ (1h05min)
+[3/8] Initialisation BDD... ⚠️ ImportError détecté
+  → Tentative 1/3... ✅ Corrigé (52min)
+[4/8] Composants NiceGUI... ✅ (1h25min)
+[5/8] Page principale... ✅ (1h35min)
+[6/8] Formulaire ajout/édition... ✅ (58min)
+[7/8] Tests unitaires... ✅ 12/12 tests (47min)
+[8/8] Documentation... ✅ (32min)
+
+Résumé : 8/8 complétées, 1 erreur résolue
+
+✅ ÉTAPE 6 complétée
+```
+
+**Si erreur non résolue** :
+```
+[3/8] Initialisation BDD... ❌ Échec après 3 tentatives
+  → Erreur enregistrée (ERR-042)
+  → Retour à Claude
+
+Résumé : 2/8 complétées, 1 échec définitif
+```
+
+---
+
+### ÉTAPE 7 : Archiver
+
+```
+---
+## ÉTAPE 7 : Archiver
+---
+
+Archivage contexte :
+✅ tasks.md mis à jour
+✅ system-state.md mis à jour
+
+Archivage registres codebase :
+✅ structure.md (11 fichiers ajoutés)
+✅ database.md (1 model)
+✅ components.md (2 composants)
+✅ dependencies.md (4 packages)
+→ 4/5 registres archivés
+
+Archivage autres :
+✅ error-patterns.md (1 erreur résolue)
+
+✅ ÉTAPE 7 complétée
+```
+
+---
+
+## ⚠️ Distinction Factuel vs Verbeux
+
+### ❌ VERBEUX (INTERDIT)
+```
+"Je vais maintenant charger les capacités..."
+"Parfait ! J'ai trouvé NiceGUI."
+"Super, c'est fait ! Passons à l'étape suivante."
+"Maintenant je crée le modèle Todo..."
+```
+
+### ✅ FACTUEL (AUTORISÉ)
+```
+Capacités apprises :
+✅ nicegui (frameworks)
+→ 1 capacité active
+
+[2/8] Modèle SQLite Todo... ✅ (1h05min)
+```
+
+**Règle** : Afficher **informations clés** (quoi, combien, résultat) sans phrases narratives.
+
+---
+
 ## 📝 Vérifications Spéciales
 
 ### ÉTAPE 0 : Apprentissage
