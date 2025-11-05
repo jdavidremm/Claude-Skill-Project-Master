@@ -405,7 +405,7 @@ APPRENTISSAGE REQUIS :
 ### ÉTAPE 1 : Enrichissement Registry
 
 **SI "ENRICHISSEMENT REGISTRY :" présent** :
-1. Parser infos fournies par user (format YAML-like)
+1. Parser infos fournies par user (format YAML-like) avec validation
 2. Pour chaque dossier :
    - Extraire : path, purpose, priority
    - **Si purpose: ignore** → Ajouter avec `load_priority: "never"` et skip
@@ -413,6 +413,19 @@ APPRENTISSAGE REQUIS :
 3. Ajouter temporairement au contexte (pour cette exécution)
 4. Marquer pour archivage ÉTAPE 7
 5. Continuer workflow normalement
+
+**Validation parsing YAML-like** :
+1. Split réponse user par lignes
+2. Pour chaque ligne commençant par "/" :
+   - `path` = ligne (doit commencer par `/`)
+   - Lire 2 prochaines lignes indentées (2 espaces minimum)
+   - Extraire `purpose:` valeur (obligatoire)
+   - Extraire `priority:` valeur (obligatoire sauf si purpose: ignore)
+3. **Si erreur parsing** (format invalide) :
+   - Afficher message d'erreur clair
+   - Réafficher template avec exemple
+   - Redemander enrichissement
+4. **Si parsing réussi** : Continuer workflow
 
 **Génération automatique triggers** :
 ```python
@@ -453,7 +466,10 @@ ENRICHISSEMENT REGISTRY :
 ```
 
 **SI nouveaux dossiers détectés SANS README et SANS enrichissement fourni** :
-→ Retourner **📁 Enrichissement registry nécessaire** (voir CONTEXT-LOADING.md format)
+→ Retourner **📁 Enrichissement registry nécessaire**
+
+**Note** : La détection et le STOP workflow sont gérés par CONTEXT-LOADING.md (guide ÉTAPE 1).
+Cette section documente seulement le format d'affichage attendu (voir exemples ÉTAPE 1 ci-dessus).
 
 ### ÉTAPE 3 : Clarifier
 

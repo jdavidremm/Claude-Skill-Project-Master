@@ -18,6 +18,10 @@ Mettre à jour TOUS les fichiers de contexte après CHAQUE tâche. **OBLIGATOIRE
 - [ ] **2.** `.claude/context/system-state.md` MIS À JOUR
   - État + modules + métriques MAJ
 
+- [ ] **2.5.** `.claude/skills/workflow-executor/project-registry.json` MIS À JOUR (SI nouveaux dossiers)
+  - Enrichi avec dossiers créés/détectés
+  - Timestamp `last_scan` MAJ
+
 ### ⭐ CRITIQUE (Registres Codebase - OBLIGATOIRE selon modifications)
 
 **⚠️ CES 5 REGISTRES SONT LE CŒUR DE LA MÉMOIRE DU SYSTÈME ⚠️**
@@ -89,8 +93,12 @@ Mettre à jour TOUS les fichiers de contexte après CHAQUE tâche. **OBLIGATOIRE
 #### Workflow d'enrichissement
 
 - [ ] **Si workflow a créé nouveaux dossiers/fichiers** :
-  - Ajouter à `project-registry.json`
-  - Remplir : `path`, `purpose`, `created_by: "workflow"`, `created_at`, `triggers` (générés depuis purpose), `load_priority`, `files_pattern`
+  - Récupérer liste depuis plan (`new_folders` créé en ÉTAPE 5)
+  - Pour chaque dossier dans `new_folders` :
+    - Déduire `purpose` depuis contexte/nom dossier
+    - Générer `triggers` automatiquement (voir algorithme ci-dessous)
+    - Déterminer `load_priority` (voir règles ci-dessous)
+    - Ajouter à `project-registry.json` avec `created_by: "workflow"`, `created_at`, `files_pattern`
 
 - [ ] **Si ÉTAPE 1 a reçu enrichissement user (format YAML-like)** :
   - Pour chaque dossier fourni :
@@ -110,15 +118,53 @@ Mettre à jour TOUS les fichiers de contexte après CHAQUE tâche. **OBLIGATOIRE
 **Règles automatiques** :
 
 ```
-high → Dossiers critiques : migrations, config, env
-medium → Dossiers fonctionnels : api, workers, services, models
-low → Dossiers auxiliaires : docs, scripts, utils, tests
+high → Dossiers critiques : migrations, config, env, models, database
+medium → Dossiers fonctionnels : api, workers, services, ui, components
+low → Dossiers auxiliaires : docs, scripts, utils, tests, static
 ```
 
 **OU deviner selon triggers** :
-- `database, migration, schema` → high
-- `api, service, worker, model` → medium
-- `doc, script, util, test` → low
+- `database, migration, schema, model` → high
+- `api, service, worker, ui, component` → medium
+- `doc, script, util, test, static` → low
+
+#### Algorithme génération triggers
+
+**1. Extraction basique** :
+- Nom dossier (singulier + pluriel) : `workers` → `["workers", "worker"]`
+- Split purpose par espaces/virgules
+- Lowercase + suppression stop-words (le, la, de, pour, avec, et, dans, etc.)
+
+**2. Détection technologies** (pattern matching dans purpose) :
+- `celery` → ajouter: `["celery", "task", "worker", "background"]`
+- `django` → ajouter: `["django", "orm", "model"]`
+- `fastapi` → ajouter: `["fastapi", "api", "endpoint", "route"]`
+- `sqlalchemy` → ajouter: `["sqlalchemy", "orm", "database", "db"]`
+- `redis` → ajouter: `["redis", "cache", "queue"]`
+- `nicegui` → ajouter: `["nicegui", "ui", "interface", "page"]`
+- `react` → ajouter: `["react", "component", "jsx"]`
+
+**3. Synonymes contextuels** :
+- `job` → ajouter: `["background", "task", "worker"]`
+- `api` → ajouter: `["endpoint", "route", "service"]`
+- `database` → ajouter: `["db", "schema", "migration"]`
+- `ui` → ajouter: `["interface", "page", "component"]`
+
+**4. Déduplication** : Supprimer doublons de la liste finale
+
+**Exemple complet** :
+```
+Dossier : workers
+Purpose : "Job processing avec Celery"
+
+1. Basique : workers → ["workers", "worker"]
+2. Split : "Job processing avec Celery" → ["job", "processing", "celery"]
+3. Stop-words : avec → supprimé
+4. Technologies : celery → ["celery", "task", "worker", "background"]
+5. Synonymes : job → ["background", "task", "worker"]
+6. Fusion : ["workers", "worker", "job", "processing", "celery", "task", "background"]
+7. Déduplication : ["workers", "worker", "job", "processing", "celery", "task", "background"]
+```
 
 #### Exemple - Workflow crée /workers
 

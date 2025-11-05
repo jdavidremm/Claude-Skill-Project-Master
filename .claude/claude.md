@@ -106,6 +106,26 @@ Approuvé
 [Précisions et apprentissage si présents]
 ```
 
+### SI agent retourne 📁 (Enrichissement Registry)
+
+1. Affiche TEL QUEL à User
+2. User répond (format YAML-like)
+3. Extrait demande initiale du message précédent
+4. RE-délègue :
+
+```
+Utilise l'agent project-master pour :
+
+DEMANDE UTILISATEUR :
+[demande initiale extraite]
+
+ENRICHISSEMENT REGISTRY :
+[réponse user au format YAML-like]
+
+[SI apprentissage/précisions présents : APPRENTISSAGE REQUIS: ...]
+[SI précisions présentes : PRÉCISIONS UTILISATEUR: ...]
+```
+
 ---
 
 ## ⛔ INTERDICTIONS

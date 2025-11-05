@@ -81,14 +81,39 @@ APPRENTISSAGE REQUIS :
 [...]
 ```
 
+### Avec enrichissement registry (après 📁)
+
+```
+Utilise le skill workflow-executor pour exécuter cette tâche :
+
+DEMANDE UTILISATEUR :
+[demande initiale]
+
+ENRICHISSEMENT REGISTRY :
+[enrichissement fourni par l'utilisateur au format YAML-like]
+
+[SI apprentissage :]
+APPRENTISSAGE REQUIS :
+[...]
+
+[SI précisions :]
+PRÉCISIONS UTILISATEUR :
+[...]
+
+[SI validation :]
+VALIDATION UTILISATEUR :
+Approuvé
+```
+
 ---
 
-## 💡 3 Types de Retour
+## 💡 4 Types de Retour
 
 Le skill peut retourner :
 1. **✅ Résultat final** → Retourne tel quel
 2. **🔄 Clarifications** → Retourne tel quel, Claude gère, tu réinvoques avec PRÉCISIONS
 3. **✋ Validation** → Retourne tel quel, Claude gère, tu réinvoques avec VALIDATION
+4. **📁 Enrichissement Registry** → Retourne tel quel, Claude gère, tu réinvoques avec ENRICHISSEMENT REGISTRY
 
 ---
 

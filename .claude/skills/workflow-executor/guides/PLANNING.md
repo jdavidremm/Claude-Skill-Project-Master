@@ -12,7 +12,8 @@ Créer plan d'exécution avec sous-tâches, estimations et dépendances.
 - [ ] 2. Estimer durée de chaque sous-tâche
 - [ ] 3. Identifier dépendances entre tâches
 - [ ] 4. Identifier fichiers impactés par tâche
-- [ ] 5. Calculer durée totale + marge 20%
+- [ ] 5. **Identifier nouveaux dossiers créés** (pour tracking archivage)
+- [ ] 6. Calculer durée totale + marge 20%
 
 ---
 
@@ -22,19 +23,24 @@ Créer plan d'exécution avec sous-tâches, estimations et dépendances.
 plan:
   task_name: "Nom de la tâche principale"
   estimated_total_duration: "8h"
+  new_folders: ["/models", "/api", "/ui"]  # Dossiers créés par workflow
   subtasks:
     - id: 1
       name: "Sous-tâche 1"
       duration: "1h30"
       dependencies: []
       files: ["fichier1.py", "fichier2.py"]
+      creates_folder: "/models"  # Si cette tâche crée un dossier
 
     - id: 2
       name: "Sous-tâche 2"
       duration: "45min"
       dependencies: [1]  # Dépend de sous-tâche 1
       files: ["fichier3.py"]
+      creates_folder: null
 ```
+
+**Note** : Les dossiers listés dans `new_folders` seront automatiquement enrichis dans `project-registry.json` pendant ÉTAPE 7 (Archivage).
 
 ---
 

@@ -80,8 +80,18 @@ Demande: "Crée une API REST avec FastAPI qui utilise SQLAlchemy et suit nos con
 #### Workflow de détection
 
 - [ ] Lire `project-registry.json`
-- [ ] Scanner filesystem : `find . -maxdepth 2 -type d`
-- [ ] Filtrer selon `ignored_patterns`
+- [ ] Lire `ignored_patterns` depuis registry
+- [ ] Scanner filesystem (filtré) :
+  ```bash
+  find . -maxdepth 2 -type d \
+    -not -path "*/\.*" \
+    -not -path "*/node_modules*" \
+    -not -path "*/venv*" \
+    -not -path "*/__pycache__*" \
+    -not -path "*/dist*" \
+    -not -path "*/build*"
+  ```
+- [ ] Filtrer selon `ignored_patterns` additionnels du registry
 - [ ] Diff : `nouveaux = actuels - registry.folders`
 - [ ] **SI nouveaux dossiers détectés** → Mode découverte
 - [ ] **SINON** → Charger selon `load_priority` et triggers
