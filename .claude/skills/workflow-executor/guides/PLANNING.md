@@ -92,3 +92,32 @@ plan:
 - Durées estimées + marge 20%
 - Dépendances identifiées
 - Fichiers impactés listés par tâche
+
+---
+
+## ❌ ANTI-PATTERNS (NE PAS FAIRE)
+
+### ❌ Anti-pattern #1 : "Plan trop vague"
+**Symptôme** : Sous-tâche "Créer backend", "Faire frontend"
+**Conséquence** : Sous-tâche non exécutable, ambiguë
+**Solution** : Sous-tâches ATOMIQUES (1 fichier, 1 action précise)
+
+### ❌ Anti-pattern #2 : "Oublier durées"
+**Symptôme** : Plan sans estimations temporelles
+**Conséquence** : Impossible de suivre progression, risque dépassement
+**Solution** : TOUJOURS estimer + marge 20%
+
+### ❌ Anti-pattern #3 : "Ignorer dépendances"
+**Symptôme** : Toutes sous-tâches marquées "parallèle"
+**Conséquence** : Erreurs exécution (fichier inexistant, import manquant)
+**Solution** : Identifier dépendances techniques ET logiques
+
+### ❌ Anti-pattern #4 : "Oublier fichiers impactés"
+**Symptôme** : Sous-tâche sans liste fichiers
+**Conséquence** : Impossible de MAJ registres correctement
+**Solution** : Lister TOUS fichiers créés/modifiés par sous-tâche
+
+### ❌ Anti-pattern #5 : "Plan sans marge"
+**Symptôme** : Estimer 2h pile sans buffer
+**Conséquence** : Dépassement systématique
+**Solution** : +20% marge (2h → 2h24min)

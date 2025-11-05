@@ -115,6 +115,8 @@ Mettre à jour TOUS les fichiers de contexte après CHAQUE tâche. **OBLIGATOIRE
 
 **⚠️ LE CŒUR DE LA MÉMOIRE DU PROJET ⚠️**
 
+**📖 LIRE D'ABORD** : `guides/REGISTRES.md` pour comprendre quand et comment MAJ chaque registre.
+
 Sans ces registres, le système perd sa mémoire et refait les mêmes erreurs.
 
 ### 6.1. structure.md
@@ -231,3 +233,32 @@ File: `path/to/file`
 Sans les 5 registres codebase (items 3-7), le système **PERD SA MÉMOIRE** et refera les mêmes erreurs !
 
 C'est LA partie la plus importante de l'archivage.
+
+---
+
+## ❌ ANTI-PATTERNS (NE PAS FAIRE)
+
+### ❌ Anti-pattern #1 : "J'ai terminé sans archiver"
+**Symptôme** : Retourner résultat final sans MAJ contexte
+**Conséquence** : Système perd toute mémoire de la tâche
+**Solution** : TOUJOURS archiver AVANT de retourner
+
+### ❌ Anti-pattern #2 : "Les registres n'ont pas changé"
+**Symptôme** : Dire "pas de changement" alors que nouveaux fichiers créés
+**Conséquence** : Progressive Disclosure casse, doublons créés
+**Solution** : Vérifier CHAQUE registre avec questions guide (REGISTRES.md)
+
+### ❌ Anti-pattern #3 : "Oublier Last updated"
+**Symptôme** : MAJ registre mais oublier date
+**Conséquence** : Impossible de savoir si info à jour
+**Solution** : TOUJOURS MAJ "Last updated: YYYY-MM-DD"
+
+### ❌ Anti-pattern #4 : "Archiver tasks.md seulement"
+**Symptôme** : MAJ tasks.md mais ignorer system-state.md et registres
+**Conséquence** : Archivage incomplet = perte mémoire partielle
+**Solution** : Suivre CHECKLIST complète (items 1-10)
+
+### ❌ Anti-pattern #5 : "Registres verbeux"
+**Symptôme** : Copier code complet dans registres
+**Conséquence** : Prompt fatigue, registres illisibles
+**Solution** : Format ultra-léger (1 ligne max, voir REGISTRES.md)

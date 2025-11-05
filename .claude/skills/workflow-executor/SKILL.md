@@ -106,22 +106,26 @@ APPRENTISSAGE REQUIS :
 
 ### ÉTAPE 7 : Archiver ⭐ RAPPEL CRITIQUE
 
-**Après avoir lu ARCHIVING.md, TU DOIS OBLIGATOIREMENT :**
+**Lectures obligatoires dans l'ordre** :
+1. Lire `guides/ARCHIVING.md`
+2. Lire `guides/REGISTRES.md` (détails sur les 5 registres)
+
+**TU DOIS OBLIGATOIREMENT :**
 
 1. ✅ Archiver `tasks.md` + `system-state.md`
 
 2. ⭐ **ARCHIVER LES 5 REGISTRES CODEBASE** (CRITIQUE) :
-   - `structure.md` + MAJ "Last updated"
-   - `database.md` + MAJ "Last updated"
-   - `api.md` + MAJ "Last updated"
-   - `components.md` + MAJ "Last updated"
-   - `dependencies.md` + MAJ "Last updated"
+   - `structure.md` + MAJ "Last updated" (si modif)
+   - `database.md` + MAJ "Last updated" (si modif)
+   - `api.md` + MAJ "Last updated" (si modif)
+   - `components.md` + MAJ "Last updated" (si modif)
+   - `dependencies.md` + MAJ "Last updated" (si modif)
 
 3. ✅ Archiver `error-patterns.md` (si erreur rencontrée)
 
 4. ✅ Archiver `improvements-log.md` / `decisions-log.md` (si applicable)
 
-**❌ INTERDICTION ABSOLUE** : Terminer ÉTAPE 7 sans les 5 registres ⭐
+**❌ INTERDICTION ABSOLUE** : Terminer ÉTAPE 7 sans vérifier les 5 registres ⭐
 
 **Sans les registres → Le système perd sa mémoire !**
 
