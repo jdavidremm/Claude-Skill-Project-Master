@@ -125,21 +125,52 @@ Capacités apprises :
 ✅ ÉTAPE 1 complétée
 ```
 
-**Si nouveaux dossiers détectés** :
-```
-Structure projet :
-✅ 12 dossiers connus chargés
-⚠️ Nouveaux dossiers : /workers (aucun README)
-→ Ajouté temporairement au contexte
-```
-
-OU si README présent :
+**Si nouveaux dossiers avec README détectés** :
 ```
 Structure projet :
 ✅ 12 dossiers connus chargés
 ✅ Nouveau dossier : /workers
 → Détecté automatiquement : "Background job processing"
 → Ajouté temporairement au contexte
+```
+
+**Si nouveaux dossiers SANS README (STOP workflow)** :
+```
+---
+## ÉTAPE 1 : Context
+---
+
+Contexte projet :
+✅ tasks.md : 3 tâches complétées, 1 en cours
+✅ system-state.md : 2 modules actifs
+✅ Registres codebase : 5 chargés
+
+Structure projet :
+✅ 12 dossiers connus chargés
+⚠️ Nouveaux dossiers sans README : /workers, /scripts
+
+---
+## 📁 Enrichissement Registry Nécessaire
+
+2 nouveaux dossiers : /workers, /scripts
+
+Format de réponse :
+
+/workers
+  purpose: [description ou "ignore"]
+  priority: [high/medium/low]
+
+/scripts
+  purpose: [description ou "ignore"]
+  priority: [high/medium/low]
+
+Notes :
+- purpose: ignore → Ignoré définitivement (temp, .vscode, etc.)
+- Triggers auto-générés depuis description
+- Priority ignorée si purpose: ignore
+
+Exemple : "/workers" avec "purpose: Job processing avec Celery" et "priority: medium"
+---
 ```
 
 **Si capacités existent mais aucune ne match** :
@@ -370,6 +401,59 @@ APPRENTISSAGE REQUIS :
 - Execution hints: [planning, validation, execution]
 - Documentation: [contenu]
 ```
+
+### ÉTAPE 1 : Enrichissement Registry
+
+**SI "ENRICHISSEMENT REGISTRY :" présent** :
+1. Parser infos fournies par user (format YAML-like)
+2. Pour chaque dossier :
+   - Extraire : path, purpose, priority
+   - **Si purpose: ignore** → Ajouter avec `load_priority: "never"` et skip
+   - **Sinon** : Générer triggers automatiquement depuis purpose
+3. Ajouter temporairement au contexte (pour cette exécution)
+4. Marquer pour archivage ÉTAPE 7
+5. Continuer workflow normalement
+
+**Génération automatique triggers** :
+```python
+# Exemple : purpose = "Job processing avec Celery"
+triggers = [
+  "workers",        # Nom du dossier
+  "worker",         # Singulier
+  "job",            # Mot-clé purpose
+  "processing",     # Mot-clé purpose
+  "celery",         # Technologie détectée
+  "background",     # Synonyme inféré (job → background)
+  "task"            # Synonyme inféré (celery → task)
+]
+```
+
+**Règles triggers** :
+1. Nom dossier (singulier + pluriel)
+2. Mots-clés du purpose (split, lowercase, stop-words removed)
+3. Technologies détectées (celery, django, redis, fastapi, etc.)
+4. Synonymes inférés (job→background, api→endpoint→route, db→database→schema)
+
+**Format reçu** :
+```
+ENRICHISSEMENT REGISTRY :
+/workers
+  purpose: Job processing avec Celery
+  priority: medium
+
+/scripts
+  purpose: ignore
+  priority: -
+
+/docs
+  purpose: Documentation technique
+  priority: low
+
+[Demande originale...]
+```
+
+**SI nouveaux dossiers détectés SANS README et SANS enrichissement fourni** :
+→ Retourner **📁 Enrichissement registry nécessaire** (voir CONTEXT-LOADING.md format)
 
 ### ÉTAPE 3 : Clarifier
 

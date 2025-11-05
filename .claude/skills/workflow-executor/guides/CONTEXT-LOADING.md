@@ -93,14 +93,27 @@ Demande: "Crée une API REST avec FastAPI qui utilise SQLAlchemy et suit nos con
 1. **Chercher README.md** dans le dossier
    - Si présent → Parser première ligne/paragraphe pour `purpose`
    - Extraire mots-clés pour `triggers`
+   - Deviner `load_priority` (migrations→high, api/workers/models→medium, docs/scripts/utils→low)
+   - Ajouter temporairement au contexte
+   - Marquer pour archivage ÉTAPE 7
 
 2. **Si aucun README** :
-   - Afficher : `⚠️ Nouveau dossier détecté : /workers (aucun README)`
-   - Afficher : `Workflow continue sans ce contexte. Enrichir manuellement project-registry.json si nécessaire.`
-   - Marquer `purpose: "unknown"` dans registry temporaire
+   - **STOP workflow**
+   - Retourner **📁 Enrichissement registry nécessaire**
+   - Afficher template structuré pour TOUS les dossiers sans README
+   - Workflow reprendra quand user fournit infos
 
-3. **Ajouter temporairement au contexte** (pour cette exécution)
-4. **Marquer pour archivage ÉTAPE 7**
+**Template de réponse** (format YAML-like) :
+```
+/[dossier]
+  purpose: [description ou "ignore"]
+  priority: [high/medium/low]
+```
+
+**Notes** :
+- `purpose: ignore` → Dossier ignoré définitivement (ex: temp, .vscode)
+- Triggers auto-générés depuis purpose par workflow
+- Priority ignorée si purpose: ignore
 
 #### Chargement contexte connu
 
@@ -126,21 +139,52 @@ Résultat : Charge /migrations + /tests seulement
 
 #### Format d'affichage
 
-```
-Structure projet :
-✅ 12 dossiers connus chargés (4 high, 8 medium)
-⚠️ Nouveaux dossiers : /workers (aucun README)
-→ Ajouté temporairement au contexte
-```
-
-OU si README présent :
-
+**Si README présent** :
 ```
 Structure projet :
 ✅ 12 dossiers connus chargés
 ✅ Nouveau dossier : /workers
 → Détecté automatiquement : "Background job processing"
 → Ajouté temporairement au contexte
+```
+
+**Si aucun README (STOP workflow)** :
+```
+---
+## ÉTAPE 1 : Context
+---
+
+Contexte projet :
+✅ tasks.md : 3 tâches complétées
+✅ system-state.md : 2 modules actifs
+✅ Registres codebase : 5 chargés
+
+Structure projet :
+✅ 12 dossiers connus chargés
+⚠️ Nouveaux dossiers sans README : /workers, /scripts
+
+---
+## 📁 Enrichissement Registry Nécessaire
+
+2 nouveaux dossiers : /workers, /scripts
+
+Format de réponse :
+
+/workers
+  purpose: [description ou "ignore"]
+  priority: [high/medium/low]
+
+/scripts
+  purpose: [description ou "ignore"]
+  priority: [high/medium/low]
+
+Notes :
+- purpose: ignore → Ignoré définitivement (temp, .vscode, etc.)
+- Triggers auto-générés depuis description
+- Priority ignorée si purpose: ignore
+
+Exemple : "/workers" avec "purpose: Job processing avec Celery" et "priority: medium"
+---
 ```
 
 ### Optionnel (Si Pertinent)

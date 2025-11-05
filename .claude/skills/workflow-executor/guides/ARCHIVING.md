@@ -90,12 +90,18 @@ Mettre à jour TOUS les fichiers de contexte après CHAQUE tâche. **OBLIGATOIRE
 
 - [ ] **Si workflow a créé nouveaux dossiers/fichiers** :
   - Ajouter à `project-registry.json`
-  - Remplir : `path`, `purpose`, `created_by: "workflow"`, `created_at`, `triggers`, `load_priority`, `files_pattern`
+  - Remplir : `path`, `purpose`, `created_by: "workflow"`, `created_at`, `triggers` (générés depuis purpose), `load_priority`, `files_pattern`
 
-- [ ] **Si ÉTAPE 1 a détecté nouveaux dossiers** :
-  - Enrichir métadonnées incomplètes (`purpose: "unknown"`)
-  - Si README détecté → Confirmer métadonnées parsées
-  - Si pas de README → Laisser `purpose: "unknown"` (utilisateur enrichira manuellement)
+- [ ] **Si ÉTAPE 1 a reçu enrichissement user (format YAML-like)** :
+  - Pour chaque dossier fourni :
+    - **Si purpose: ignore** → Ajouter avec `purpose: "ignored"`, `load_priority: "never"`, `triggers: []`
+    - **Sinon** → Générer triggers depuis purpose, ajouter avec métadonnées complètes
+  - Marquer `created_by: "user"`
+
+- [ ] **Si ÉTAPE 1 a détecté dossier avec README** :
+  - Confirmer métadonnées parsées
+  - Générer triggers depuis purpose
+  - Ajouter avec métadonnées complètes
 
 - [ ] Mettre à jour `last_scan` timestamp
 
@@ -127,6 +133,22 @@ low → Dossiers auxiliaires : docs, scripts, utils, tests
   "files_pattern": "*.py"
 }
 ```
+
+#### Exemple - User ignore /temp
+
+```json
+{
+  "path": "temp",
+  "purpose": "ignored",
+  "created_by": "user",
+  "created_at": "2025-11-05",
+  "triggers": [],
+  "load_priority": "never",
+  "files_pattern": null
+}
+```
+
+**Note** : Dossiers `purpose: "ignored"` ne seront JAMAIS chargés ni redemandés dans futurs workflows.
 
 #### Format d'affichage
 
