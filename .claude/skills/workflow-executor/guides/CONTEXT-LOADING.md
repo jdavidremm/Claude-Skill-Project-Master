@@ -22,6 +22,57 @@ Charger l'état actuel du projet avant de commencer une nouvelle tâche.
 - [ ] `.claude/context/codebase/components.md` → Composants UI + purpose
 - [ ] `.claude/context/codebase/dependencies.md` → Dépendances + versions
 
+### ⭐ OBLIGATOIRE (Capacités Apprises)
+
+- [ ] `capabilities/_registry.json` → Lire registre des capacités
+- [ ] Détecter triggers dans demande utilisateur
+- [ ] Charger capacités pertinentes depuis `capabilities/[category]/[id].json`
+
+**Workflow de chargement** :
+1. Lire `capabilities/_registry.json`
+2. Parser demande utilisateur pour identifier mots-clés
+3. Matcher avec triggers de chaque capacité
+4. Charger UNIQUEMENT les capacités qui matchent (Progressive Disclosure)
+
+**Exemple - Chargement unique** :
+```
+Demande: "Ajoute un bouton avec NiceGUI"
+
+1. Lit _registry.json → 1 capacité disponible : nicegui
+2. Triggers nicegui: ["nicegui", "nice gui", "ui.button", "@ui.page"]
+3. Détecte "NiceGUI" et "bouton" → Match ! ✅
+4. Charge capabilities/frameworks/nicegui.json
+5. Capacité NiceGUI disponible pour toutes les étapes
+```
+
+**Exemple - Chargement multiple** :
+```
+Demande: "Crée une API REST avec FastAPI qui utilise SQLAlchemy et suit nos conventions de code"
+
+1. Lit _registry.json → 3 capacités disponibles
+2. Matching :
+   - "FastAPI" → Match "fastapi" triggers ✅
+   - "SQLAlchemy" → Match "sqlalchemy" triggers ✅
+   - "conventions" → Match "project-guidelines" triggers ✅
+3. Charge 3 fichiers :
+   - capabilities/frameworks/fastapi.json
+   - capabilities/libraries/sqlalchemy.json
+   - capabilities/project-guidelines/coding-standards.json
+4. Les 3 capacités disponibles pour toutes les étapes
+```
+
+**Si ÉTAPE 0 a créé une nouvelle capacité** :
+→ Elle est déjà persistée dans `_registry.json` + fichier JSON
+→ Elle sera détectée et chargée ici automatiquement
+
+**Si workflow relancé plus tard (sans apprentissage)** :
+→ ÉTAPE 0 skip (pas de "APPRENTISSAGE REQUIS :")
+→ Capacités existantes chargées ici quand même ✅
+
+**Progressive Disclosure** :
+- Capacités = Version légère (best_practices, common_patterns, execution_hints)
+- SI besoin détails exhaustifs → Read `documentation` field du JSON
+
 ### Optionnel (Si Pertinent)
 
 - [ ] `.claude/context/improvements-log.md` → Améliorations récentes
@@ -70,4 +121,13 @@ Vérifie dans `tasks.md` si tâche marquée "⏸️ En cours" :
 
 **Vérifie que tous les items de la CHECKLIST sont cochés** ✅
 
-Si un fichier obligatoire (⭐) manque ou est vide → Impossible de continuer avec contexte incomplet.
+- État du Projet : tasks.md, system-state.md, error-patterns.md chargés
+- Registres Codebase (⭐) : 5 registres chargés
+- Capacités Apprises (⭐) : _registry.json lu + capacités pertinentes chargées
+
+Si un fichier obligatoire (⭐) manque → Impossible de continuer avec contexte incomplet.
+
+**Note sur les capacités** :
+- Si _registry.json vide (nouveau projet) → OK, continuer
+- Si capacités existent MAIS aucune ne match → OK, continuer
+- L'essentiel : AVOIR VÉRIFIÉ et tenté le matching

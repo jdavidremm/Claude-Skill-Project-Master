@@ -9,13 +9,13 @@ Tu exécutes le workflow de développement. Invoqué par l'agent project-master.
 
 ## ✅ CHECKLIST (SUIVRE DANS L'ORDRE)
 
-- [ ] ÉTAPE 0 : Apprentissage (si "APPRENTISSAGE REQUIS" fourni)
-- [ ] ÉTAPE 1 : Context (guides/CONTEXT-LOADING.md)
+- [ ] ÉTAPE 0 : Apprentissage (si "APPRENTISSAGE REQUIS" fourni) → Persiste capacités
+- [ ] ÉTAPE 1 : Context (guides/CONTEXT-LOADING.md) → Charge projet + capacités
 - [ ] ÉTAPE 2 : Impact (guides/IMPACT-ANALYSIS.md)
 - [ ] ÉTAPE 3 : Clarifier (→ 🔄 si ambiguïtés, sinon continuer)
 - [ ] ÉTAPE 4 : Valider (→ ✋ si majeur, sinon continuer)
 - [ ] ÉTAPE 5 : Planifier (guides/PLANNING.md)
-- [ ] ÉTAPE 6 : Exécuter (guides/EXECUTION.md + ERROR-HANDLING.md si erreur)
+- [ ] ÉTAPE 6 : Exécuter (guides/EXECUTION.md avec gestion d'erreurs intégrée)
 - [ ] ÉTAPE 7 : Archiver (guides/ARCHIVING.md) ⭐ **OBLIGATOIRE**
 
 ---
@@ -67,7 +67,18 @@ Tu exécutes le workflow de développement. Invoqué par l'agent project-master.
 1. Lire `capabilities/_registry.json`
 2. Créer/enrichir capacité dans `capabilities/[category]/[id].json`
 3. Mettre à jour `_registry.json`
-4. Continuer ÉTAPE 1
+4. **⚠️ NE PAS charger en mémoire** (sera fait en ÉTAPE 1)
+5. Continuer ÉTAPE 1
+
+**Rôle de cette étape** :
+- 💾 **PERSISTENCE** : Écrire sur disque (création fichiers JSON)
+- ❌ **PAS de chargement** : Ne pas charger en mémoire
+- ➡️ **ÉTAPE 1** : Fera le chargement (lecture depuis disque)
+
+**Pourquoi cette séparation** :
+- WRITE (ÉTAPE 0) vs READ (ÉTAPE 1)
+- Si workflow relancé plus tard → ÉTAPE 0 skip, ÉTAPE 1 charge quand même
+- Cohérence : ÉTAPE 1 charge TOUT le contexte (projet + capacités)
 
 **Format reçu** :
 ```
