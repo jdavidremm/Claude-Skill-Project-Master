@@ -389,3 +389,18 @@ C'est LA partie la plus importante de l'archivage.
 **Symptôme** : Copier code complet dans registres
 **Conséquence** : Prompt fatigue, registres illisibles
 **Solution** : Format ultra-léger (1 ligne max, voir REGISTRES.md)
+
+---
+
+## 📊 Note sur VERBOSITY
+
+Le niveau de détail affiché s'adapte selon `VERBOSITY` (voir SKILL.md) :
+
+- **silent** : Pas d'affichage ÉTAPE 7 (archivage silencieux)
+- **normal** : Résumé factuel (fichiers archivés, nombre de registres MAJ) - défaut
+- **verbose** : Détails complets :
+  - Liste précise des sections/entrées ajoutées dans chaque fichier
+  - Contenu des triggers générés pour nouveaux dossiers
+  - Chemins absolus des fichiers archivés
+  - Nombre de lignes ajoutées/modifiées par fichier
+  - Décisions prises (registres skippés si aucun changement, patterns enregistrés, etc.)

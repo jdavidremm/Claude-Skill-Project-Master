@@ -127,3 +127,18 @@ plan:
 **Symptôme** : Estimer 2h pile sans buffer
 **Conséquence** : Dépassement systématique
 **Solution** : +20% marge (2h → 2h24min)
+
+---
+
+## 📊 Note sur VERBOSITY
+
+Le niveau de détail affiché s'adapte selon `VERBOSITY` (voir SKILL.md) :
+
+- **silent** : Pas d'affichage ÉTAPE 5 (planification silencieuse)
+- **normal** : Résumé factuel (nombre de sous-tâches, durée totale, tâches parallélisables) - défaut
+- **verbose** : Détails complets :
+  - Raisonnement pour la décomposition en sous-tâches
+  - Calculs des estimations (base + marge + facteurs)
+  - Identification des dépendances (pourquoi A dépend de B)
+  - Fichiers impactés listés pour chaque sous-tâche
+  - Nouveaux dossiers créés avec justification

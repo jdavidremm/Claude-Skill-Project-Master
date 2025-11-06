@@ -59,6 +59,193 @@ Tu exécutes le workflow de développement. Invoqué par l'agent project-master.
 
 ---
 
+## 📊 Niveaux de Verbosité (VERBOSITY)
+
+### Principe
+
+Le paramètre `VERBOSITY` contrôle le **niveau de détail** de l'affichage (pas la narration).
+
+⚠️ **Distinction importante** :
+- **Verbosité narrative** (INTERDITE) : "Je vais...", "Parfait !", "Super !" → Voir section "Distinction Factuel vs Verbeux"
+- **Verbosité de détail** (CONFIGURABLE) : Combien d'informations afficher → Cette section
+
+### 3 Niveaux Disponibles
+
+#### 1. silent (Silencieux)
+
+**Comportement** :
+- Aucun affichage des étapes intermédiaires
+- Uniquement le message final (✅ Succès / 🔄 Clarifications / ✋ Validation / 📁 Enrichissement)
+- Pas de feedback temps réel
+
+**Quand l'utiliser** :
+- Tâches mineures rapides (<30min)
+- Utilisateur veut juste le résultat final
+- Contexte non-interactif (scripts, CI/CD)
+
+**Exemple de sortie** :
+```
+✅ **Todo App créé avec succès !** (2h 30min)
+
+📂 **Fichiers créés** :
+• database/models/todo.py - Modèle SQLAlchemy Todo
+• pages/todos.py - Page principale liste todos
+...
+```
+
+#### 2. normal (Par défaut)
+
+**Comportement** :
+- Affichage début/fin de chaque étape (avec `---\n## ÉTAPE X\n---`)
+- Feedback temps réel pour sous-tâches >2min (format `[X/Total]`)
+- Résumé factuel à chaque étape complétée
+- Pas de détails techniques (commandes, fichiers lus)
+
+**Quand l'utiliser** :
+- Par défaut si rien spécifié
+- Tâches moyennes (30min - 3h)
+- Utilisateur veut suivre la progression sans détails
+
+**Exemple de sortie** :
+```
+---
+## ÉTAPE 1 : Context
+---
+
+Contexte projet :
+✅ tasks.md : 3 tâches complétées, 1 en cours
+✅ system-state.md : 2 modules actifs
+
+Capacités apprises :
+✅ nicegui (frameworks)
+→ 1 capacité active
+
+✅ ÉTAPE 1 complétée
+
+---
+## ÉTAPE 6 : Exécuter
+---
+
+[1/8] Configuration projet... ✅ (28min)
+[2/8] Modèle SQLite Todo... ✅ (1h05min)
+...
+```
+
+#### 3. verbose (Détaillé)
+
+**Comportement** :
+- Tout de `normal` +
+- Feedback temps réel toutes les 30s (même si <2min)
+- Commandes Bash exécutées
+- Fichiers lus/écrits avec chemins complets
+- Capacités utilisées avec détails (triggers matchés, knowledge utilisé)
+- Détails parsing/validation
+- Décisions prises (pourquoi tel choix)
+
+**Quand l'utiliser** :
+- Tâches complexes (>3h)
+- Débogage workflow
+- Apprentissage du système
+- Utilisateur veut comprendre le processus
+
+**Exemple de sortie** :
+```
+---
+## ÉTAPE 1 : Context
+---
+
+📖 Lecture contexte...
+  → Read: .claude/context/tasks.md (142 lignes)
+  → Read: .claude/context/system-state.md (87 lignes)
+  → Read: .claude/context/codebase/structure.md (234 lignes)
+  → Read: .claude/context/codebase/database.md (56 lignes)
+  → Read: .claude/context/codebase/components.md (91 lignes)
+
+📖 Chargement capacités...
+  → Read: .claude/skills/workflow-executor/capabilities/_registry.json
+  → Triggers matchés: "nicegui", "ui.button"
+  → Read: .claude/skills/workflow-executor/capabilities/frameworks/nicegui.json
+
+Contexte projet :
+✅ tasks.md : 3 tâches complétées, 1 en cours
+✅ system-state.md : 2 modules actifs
+✅ Registres codebase : 5 chargés
+
+Capacités apprises :
+✅ nicegui (frameworks)
+  → Knowledge utilisé: best_practices, common_patterns
+  → Execution hints: planning, validation
+→ 1 capacité active
+
+✅ ÉTAPE 1 complétée
+
+---
+## ÉTAPE 6 : Exécuter
+---
+
+[1/8] Configuration projet... 🔄 (0min / 28min estimées)
+  → Write: pyproject.toml
+  → Write: main.py
+  → Bash: python -m py_compile main.py ✅
+[1/8] Configuration projet... 🔄 (15min / 28min estimées)
+[1/8] Configuration projet... ✅ (25min)
+...
+```
+
+### Comment Spécifier VERBOSITY
+
+**Format d'invocation Claude → Agent** :
+```
+Utilise l'agent project-master pour :
+
+DEMANDE UTILISATEUR :
+Créer une Todo App avec NiceGUI
+
+VERBOSITY: verbose
+```
+
+**Format d'invocation Agent → Skill** :
+```
+Utilise le skill workflow-executor pour exécuter cette tâche :
+
+DEMANDE UTILISATEUR :
+Créer une Todo App avec NiceGUI
+
+VERBOSITY: verbose
+```
+
+**Détection dans l'input** :
+```python
+if "VERBOSITY: verbose" in input:
+    verbosity = "verbose"
+elif "VERBOSITY: silent" in input:
+    verbosity = "silent"
+else:
+    verbosity = "normal"  # Défaut
+```
+
+### Adaptation par Étape
+
+| Étape | silent | normal | verbose |
+|-------|--------|--------|---------|
+| **ÉTAPE 0-7** | Pas d'affichage | `---\n## ÉTAPE X\n---` + résumé | `---\n## ÉTAPE X\n---` + détails commandes |
+| **Feedback temps réel** | Non | Si >2min | Toujours (30s) |
+| **Fichiers lus** | Non | Non | Oui avec chemins |
+| **Capacités** | Non | Résumé | Détails (triggers, knowledge) |
+| **Commandes Bash** | Non | Non | Oui avec output |
+| **Message final** | Oui | Oui | Oui |
+
+### Note sur EXECUTION.md
+
+Le guide `guides/EXECUTION.md` documente le feedback temps réel avec cette règle :
+
+> **Note sur VERBOSITY**
+> - **silent** : Pas de feedback temps réel (juste résultat final)
+> - **normal** : Affichage début/fin de chaque sous-tâche (défaut)
+> - **verbose** : Affichage avec updates toutes les 30s + détails commandes
+
+---
+
 ## 📊 Format d'Affichage par Étape
 
 **Principe** : Affichage **factuel et concis** (pas verbeux).

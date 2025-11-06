@@ -300,3 +300,18 @@ Si un fichier obligatoire (⭐) manque → Impossible de continuer avec contexte
 - Si _registry.json vide (nouveau projet) → OK, continuer
 - Si capacités existent MAIS aucune ne match → OK, continuer
 - L'essentiel : AVOIR VÉRIFIÉ et tenté le matching
+
+---
+
+## 📊 Note sur VERBOSITY
+
+Le niveau de détail affiché s'adapte selon `VERBOSITY` (voir SKILL.md) :
+
+- **silent** : Pas d'affichage ÉTAPE 1 (chargement silencieux)
+- **normal** : Résumé factuel (nombre de fichiers, capacités matchées) - défaut
+- **verbose** : Détails complets :
+  - Chemins absolus de tous les fichiers lus
+  - Nombre de lignes par fichier
+  - Triggers matchés pour les capacités
+  - Knowledge et execution hints chargés
+  - Décisions prises (nouveaux dossiers ignorés, capacités skippées, etc.)
