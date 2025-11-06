@@ -1,0 +1,103 @@
+{
+  "_schema": {
+    "_description": "Project Registry - Registre des dossiers et fichiers du projet",
+    "_note": "Ce fichier est utilisé par workflow-executor pour détecter et charger la structure du projet",
+    "version": {
+      "type": "string",
+      "description": "Version du format de registry",
+      "pattern": "^\\d+\\.\\d+$",
+      "example": "1.0"
+    },
+    "last_scan": {
+      "type": "string|null",
+      "description": "ISO date du dernier scan (YYYY-MM-DD) ou null si jamais scanné",
+      "format": "date",
+      "example": "2025-11-06"
+    },
+    "folders": {
+      "type": "array",
+      "description": "Liste des dossiers connus du projet",
+      "items": {
+        "path": {
+          "type": "string",
+          "description": "Chemin relatif depuis racine (ex: 'workers' ou 'api/routes')",
+          "required": true
+        },
+        "purpose": {
+          "type": "string",
+          "description": "Description du dossier ou 'ignored' si ignoré",
+          "required": true
+        },
+        "created_by": {
+          "type": "string",
+          "enum": ["workflow", "user", "readme"],
+          "description": "Source de la détection",
+          "required": true
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date",
+          "description": "Date de création dans le registry (YYYY-MM-DD)",
+          "required": true
+        },
+        "triggers": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Mots-clés pour chargement automatique (auto-générés depuis purpose)",
+          "required": true
+        },
+        "load_priority": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "never"],
+          "description": "high: toujours charger, medium: si triggers matchent, low: mention explicite, never: ignoré",
+          "required": true
+        },
+        "files_pattern": {
+          "type": "string|null",
+          "description": "Pattern de fichiers (ex: '*.py') ou null si ignored",
+          "required": true
+        }
+      },
+      "example": {
+        "path": "api",
+        "purpose": "Routes API REST avec FastAPI",
+        "created_by": "workflow",
+        "created_at": "2025-11-06",
+        "triggers": ["api", "route", "endpoint", "fastapi", "rest"],
+        "load_priority": "high",
+        "files_pattern": "*.py"
+      }
+    },
+    "important_files": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Fichiers racine importants (main.py, config.yml, etc.)",
+      "example": ["main.py", "requirements.txt", ".env.example"]
+    },
+    "ignored_patterns": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Patterns de dossiers à ignorer lors du scan",
+      "example": ["node_modules", "venv", "__pycache__", ".git"]
+    }
+  },
+  "version": "1.0",
+  "last_scan": null,
+  "folders": [],
+  "important_files": [],
+  "ignored_patterns": [
+    "node_modules",
+    "venv",
+    ".venv",
+    "__pycache__",
+    ".git",
+    ".pytest_cache",
+    "dist",
+    "build",
+    ".next",
+    ".nuxt",
+    "target",
+    ".idea",
+    ".vscode"
+  ]
+}

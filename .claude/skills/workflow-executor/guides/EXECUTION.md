@@ -49,6 +49,77 @@ Exécuter le plan méthodiquement, sous-tâche par sous-tâche, EN SILENCE.
 
 ---
 
+## ⏱️ Feedback Temps Réel (Progression)
+
+### Principe
+
+Pour chaque sous-tâche, afficher la progression en temps réel permet à l'utilisateur de suivre l'avancement sans "silence" prolongé.
+
+### Format d'Affichage
+
+**Au DÉBUT de la sous-tâche** :
+```
+[X/Total] Nom sous-tâche... 🔄 (0min / Ymin estimées)
+```
+
+**Pendant l'exécution (si durée estimée > 2min)** :
+Mettre à jour l'affichage toutes les 30 secondes :
+```
+[X/Total] Nom sous-tâche... 🔄 (2min30 / 5min estimées)
+```
+
+**À la FIN de la sous-tâche** :
+```
+[X/Total] Nom sous-tâche... ✅ (4min45)
+```
+
+**En cas d'ERREUR** :
+```
+[X/Total] Nom sous-tâche... ⚠️ [Type]Error détecté
+  → Tentative 1/3... 🔄
+  → Tentative 1/3... ✅ Corrigé (6min20)
+```
+
+### Exemple Complet
+
+```
+[1/8] Configuration projet... 🔄 (0min / 28min estimées)
+[1/8] Configuration projet... 🔄 (15min / 28min estimées)
+[1/8] Configuration projet... ✅ (25min)
+
+[2/8] Modèle SQLite Todo... 🔄 (0min / 1h05min estimées)
+[2/8] Modèle SQLite Todo... 🔄 (30min / 1h05min estimées)
+[2/8] Modèle SQLite Todo... ✅ (1h02min)
+
+[3/8] Initialisation BDD... 🔄 (0min / 52min estimées)
+[3/8] Initialisation BDD... ⚠️ ImportError détecté
+  → Tentative 1/3... 🔄
+  → Tentative 1/3... ✅ Corrigé (58min)
+
+[4/8] Composants NiceGUI... 🔄 (0min / 1h25min estimées)
+...
+```
+
+### Règles
+
+1. **Toujours afficher au début** : Ne jamais laisser l'utilisateur dans le silence
+2. **Updates réguliers si > 2min** : Toutes les 30 secondes
+3. **Précision temps** : Format "Xh Ymin" (ex: "1h05min", "28min")
+4. **Symboles clairs** :
+   - 🔄 = En cours
+   - ✅ = Complété
+   - ⚠️ = Erreur détectée
+   - ❌ = Échec définitif
+
+### Note sur VERBOSITY
+
+Le niveau de détail s'adapte selon `VERBOSITY` (voir SKILL.md) :
+- **silent** : Pas de feedback temps réel (juste résultat final)
+- **normal** : Affichage début/fin de chaque sous-tâche (défaut)
+- **verbose** : Affichage avec updates toutes les 30s + détails commandes
+
+---
+
 ## 🎯 Ordre d'Exécution Recommandé
 
 1. **Models** (fondation)

@@ -79,7 +79,7 @@ Demande: "Crée une API REST avec FastAPI qui utilise SQLAlchemy et suit nos con
 
 #### Workflow de détection
 
-- [ ] Lire `project-registry.json`
+- [ ] Lire `.claude/context/project-registry.json`
 - [ ] Lire `ignored_patterns` depuis registry
 - [ ] Scanner filesystem (filtré) :
   ```bash
@@ -234,6 +234,51 @@ Demande: "Ajoute endpoint pour archiver un todo"
 
 ---
 
+## 💾 Gestion Mémoire des Capacités
+
+### Chargement (ÉTAPE 1)
+
+1. Lire `capabilities/_registry.json`
+2. Matcher triggers avec demande utilisateur
+3. Lire fichiers JSON des capacités matchées
+4. **Stocker dans variable `loaded_capabilities`** (contexte du skill en mémoire)
+
+### Utilisation (ÉTAPES 2-6)
+
+Les capacités sont accessibles via `loaded_capabilities` en mémoire:
+- **ÉTAPE 2 (Impact)**: Utiliser `best_practices` et `common_errors` pour l'analyse
+- **ÉTAPE 5 (Planning)**: Utiliser `execution_hints.planning` et `file_structure`
+- **ÉTAPE 6 (Execution)**: Utiliser `common_patterns`, `common_errors.solution`, `execution_hints.execution`
+
+Pas besoin de relire les fichiers JSON à chaque étape.
+
+### Progressive Disclosure - Détails Complets
+
+**Par défaut**: Charger structure légère depuis JSON
+- `id`, `name`, `category`, `triggers`
+- `best_practices` (liste courte)
+- `common_patterns` (noms + descriptions courtes)
+- `common_errors` (types + solutions courtes)
+- `execution_hints` (listes courtes)
+
+**Si besoin détails exhaustifs** (optionnel):
+- ÉTAPE 2: Si `common_errors` matching → Lire détails erreur depuis champ `documentation`
+- ÉTAPE 5: Si `file_structure` complexe → Lire documentation complète
+- ÉTAPE 6: Si erreur rencontrée → Lire solution détaillée depuis `common_errors.documentation`
+- Toute ÉTAPE: Si `execution_hints` mentionne "Voir documentation" → Read champ `documentation` du JSON
+
+**Principe**: Charger léger par défaut, approfondir seulement si nécessaire.
+
+### Après Archivage (ÉTAPE 7)
+
+- Capacités restent **persistées** dans fichiers JSON sur disque (`.claude/skills/workflow-executor/capabilities/[category]/[id].json`)
+- Contexte du skill est **libéré** après retour du résultat à Claude
+- Prochain workflow rechargera les capacités pertinentes si triggers matchent la demande
+
+**Analogie**: Comme charger des librairies Python avec `import` au début, utilisables partout ensuite.
+
+---
+
 ## ⏸️ Détection d'Interruption
 
 Vérifie dans `tasks.md` si tâche marquée "⏸️ En cours" :
@@ -255,3 +300,18 @@ Si un fichier obligatoire (⭐) manque → Impossible de continuer avec contexte
 - Si _registry.json vide (nouveau projet) → OK, continuer
 - Si capacités existent MAIS aucune ne match → OK, continuer
 - L'essentiel : AVOIR VÉRIFIÉ et tenté le matching
+
+---
+
+## 📊 Note sur VERBOSITY
+
+Le niveau de détail affiché s'adapte selon `VERBOSITY` (voir SKILL.md) :
+
+- **silent** : Pas d'affichage ÉTAPE 1 (chargement silencieux)
+- **normal** : Résumé factuel (nombre de fichiers, capacités matchées) - défaut
+- **verbose** : Détails complets :
+  - Chemins absolus de tous les fichiers lus
+  - Nombre de lignes par fichier
+  - Triggers matchés pour les capacités
+  - Knowledge et execution hints chargés
+  - Décisions prises (nouveaux dossiers ignorés, capacités skippées, etc.)
