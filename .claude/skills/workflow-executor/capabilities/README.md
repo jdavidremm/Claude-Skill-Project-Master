@@ -2,11 +2,11 @@
 
 ## 🎯 Philosophie
 
-project-master démarre **VIDE** (ou quasi-vide) et s'enrichit **dynamiquement** au fur et à mesure du projet, selon **TES besoins spécifiques**.
+Le système démarre **VIDE** (ou quasi-vide) et s'enrichit **dynamiquement** au fur et à mesure du projet, selon **TES besoins spécifiques**.
 
 ### ❌ Ce qu'on NE veut PAS
 ```
-project-master pré-chargé avec :
+Système pré-chargé avec :
 - React, Vue, Angular, Svelte...
 - PostgreSQL, MongoDB, MySQL...
 - Express, Fastify, NestJS...
@@ -15,18 +15,18 @@ project-master pré-chargé avec :
 
 ### ✅ Ce qu'on VEUT
 ```
-project-master démarre vide
+Le système démarre vide
 
 User : "Voici la doc de React 18 pour notre projet"
-→ project-master l'intègre
+→ Le workflow-executor l'intègre
 
 User : "Va chercher la doc de l'API Stripe"
-→ project-master la récupère et l'ajoute
+→ Le workflow-executor la récupère et l'ajoute
 
 User : "On utilise toujours cette structure de fichiers"
-→ project-master le mémorise
+→ Le workflow-executor le mémorise
 
-→ project-master devient expert de TON projet spécifiquement
+→ Le système devient expert de TON projet spécifiquement
 ```
 
 ## 📁 Structure
@@ -43,7 +43,7 @@ capabilities/
 └── project-guidelines/               # Guidelines spécifiques au projet
 ```
 
-## 🔄 Comment Enrichir project-master
+## 🔄 Comment Enrichir le Système
 
 ### Méthode 1 : Fournir un Fichier
 
@@ -53,7 +53,7 @@ capabilities/
 [Fournit react-guidelines.md]
 ```
 
-**Ce que fait project-master** :
+**Ce que fait le workflow-executor** :
 1. Lit le fichier `.md` fourni
 2. Extrait les informations pertinentes
 3. Convertit en format JSON de capacité
@@ -83,7 +83,7 @@ capabilities/
 "Va chercher la documentation de Stripe API sur stripe.com/docs/api"
 ```
 
-**Ce que fait project-master** :
+**Ce que fait le workflow-executor** :
 1. Fetch le contenu du lien
 2. Extrait les informations clés
 3. Crée `capabilities/libraries/stripe-api.json`
@@ -112,7 +112,7 @@ capabilities/
 "Pour ce projet, on utilise TOUJOURS des interfaces TypeScript plutôt que des types, et tous les composants doivent avoir un fichier .test.tsx"
 ```
 
-**Ce que fait project-master** :
+**Ce que fait le workflow-executor** :
 1. Crée `capabilities/project-guidelines/typescript-conventions.json`
 2. Ajoute ces règles dans `best_practices`
 3. Met à jour `_registry.json`
@@ -135,12 +135,12 @@ capabilities/
 }
 ```
 
-### Méthode 4 : Apprentissage Automatique (Proposition de project-master)
+### Méthode 4 : Apprentissage Automatique (Proposition du workflow-executor)
 
 **Situation** :
-project-master détecte que tu utilises toujours le même pattern de structure de dossiers.
+Le workflow-executor détecte que tu utilises toujours le même pattern de structure de dossiers.
 
-**Ce que fait project-master** :
+**Ce que fait le workflow-executor** :
 ```json
 // Retour à Claude
 {
@@ -161,7 +161,7 @@ project-master détecte que tu utilises toujours le même pattern de structure d
 ```
 capabilities/ : VIDE (ou juste _registry.json vide)
 
-project-master : Connaissances générales uniquement
+Le système : Connaissances générales uniquement
 ```
 
 ### 🌿 Jour 2 - Premiers ajouts
@@ -173,7 +173,7 @@ capabilities/ :
 └── project-guidelines/
     └── conventions.json ✅
 
-project-master connaît maintenant :
+Le système connaît maintenant :
 - Conventions de code
 - Stack technique
 ```
@@ -189,7 +189,7 @@ capabilities/ :
     ├── stripe-api.json ✅
     └── supabase-api.json ✅
 
-project-master connaît maintenant :
+Le système connaît maintenant :
 - Conventions de code
 - API Stripe
 - API Supabase
@@ -197,7 +197,7 @@ project-master connaît maintenant :
 
 ### 🌲 Jour 10 - Apprentissage
 ```
-project-master détecte pattern et propose mémorisation
+Le workflow-executor détecte pattern et propose mémorisation
 
 capabilities/ :
 ├── project-guidelines/
@@ -208,7 +208,7 @@ capabilities/ :
 └── patterns/
     └── error-handling-pattern.json ✅
 
-project-master applique maintenant :
+Le système applique maintenant :
 - Conventions
 - Connaît les APIs
 - Applique les patterns détectés
@@ -222,7 +222,7 @@ capabilities/ contient :
 - 2 frameworks/
 - 4 patterns/
 
-→ project-master est devenu EXPERT de TON projet
+→ Le système est devenu EXPERT de TON projet
 → Génère du code PARFAITEMENT aligné avec TES conventions
 → Connaît TOUTES les APIs que TU utilises
 ```
@@ -340,7 +340,7 @@ L'utilisateur peut dire à Claude :
 "Mets à jour la capacité [nom]"
 ```
 
-## ⚙️ Workflow project-master
+## ⚙️ Workflow du Système
 
 ### ÉTAPE 1 : Charger Contexte + Capacités
 
@@ -355,7 +355,7 @@ L'utilisateur peut dire à Claude :
 ```
 User: "Créé un composant de paiement Stripe"
 
-project-master :
+Le workflow-executor :
 1. Lit _registry.json
 2. Détecte "stripe" dans la demande
 3. Charge capabilities/libraries/stripe-api.json
@@ -366,7 +366,7 @@ project-master :
 
 ### ÉTAPE 2-6 : Utiliser les Capacités
 
-Durant tout le workflow, project-master utilise :
+Durant tout le workflow, le workflow-executor utilise :
 - `best_practices` pour l'analyse d'impact
 - `file_structure` pour la planification
 - `common_errors` pour la résolution d'erreurs
@@ -374,7 +374,7 @@ Durant tout le workflow, project-master utilise :
 
 ### ÉTAPE 7 : Apprentissage
 
-À la fin, project-master peut proposer :
+À la fin, le workflow-executor peut proposer :
 ```json
 {
   "status": "success",
@@ -446,7 +446,7 @@ Structure standard (JSON) :
 ```
 User: "Mets à jour la capacité React, on utilise maintenant React 19"
 
-project-master :
+Le workflow-executor :
 1. Trouve capabilities/frameworks/react-guidelines.json
 2. Met à jour le contenu
 3. Incrémente la version
@@ -457,7 +457,7 @@ project-master :
 ```
 User: "On n'utilise plus Stripe, supprime cette capacité"
 
-project-master :
+Le workflow-executor :
 1. Supprime capabilities/libraries/stripe-api.json
 2. Enlève l'entrée de _registry.json
 ```
@@ -466,7 +466,7 @@ project-master :
 ```
 User: "Montre-moi toutes les capacités actuelles"
 
-project-master :
+Le workflow-executor :
 1. Lit _registry.json
 2. Liste toutes les capacités avec :
    - Nom
@@ -518,8 +518,8 @@ capabilities/patterns/feature-structure.json
 
 ### Jour 15
 ```bash
-project-master détecte : "Error handling pattern répété 5 fois"
-project-master propose : "Mémoriser ce pattern ?"
+Le workflow-executor détecte : "Error handling pattern répété 5 fois"
+Le workflow-executor propose : "Mémoriser ce pattern ?"
 User : "Oui"
 
 # Ajouté :
@@ -540,7 +540,7 @@ capabilities/
     ├── feature-structure.json
     └── error-handling.json
 
-→ project-master connaît PARFAITEMENT ton projet
+→ Le système connaît PARFAITEMENT ton projet
 ```
 
 ---
@@ -549,7 +549,7 @@ capabilities/
 
 1. **Démarre avec rien** : `_registry.json` est vide
 2. **Ajoute au fur et à mesure** : Quand tu en as besoin
-3. **Laisse apprendre** : project-master proposera de mémoriser
+3. **Laisse apprendre** : Le workflow-executor proposera de mémoriser
 4. **Maintiens à jour** : Mets à jour si ça change
 
 **Le système s'enrichit AVEC toi, POUR toi** 🎯
