@@ -10,7 +10,7 @@ Tu exécutes le workflow de développement. Invoqué par l'agent project-master.
 ## ✅ CHECKLIST (SUIVRE DANS L'ORDRE)
 
 - [ ] ÉTAPE 0 : Apprentissage (si "APPRENTISSAGE REQUIS" fourni) → Persiste capacités
-- [ ] ÉTAPE 1 : Context (guides/CONTEXT-LOADING.md) → Charge projet + capacités
+- [ ] ÉTAPE 1 : Context (guides/CONTEXT-LOADING.md) → Charge projet + capacités (→ 📁 si nouveaux dossiers sans README)
 - [ ] ÉTAPE 2 : Impact (guides/IMPACT-ANALYSIS.md)
 - [ ] ÉTAPE 3 : Clarifier (→ 🔄 si ambiguïtés, sinon continuer)
 - [ ] ÉTAPE 4 : Valider (→ ✋ si majeur, sinon continuer)
@@ -521,6 +521,103 @@ Cette section documente seulement le format d'affichage attendu (voir exemples �
 
 ---
 
+## 🔄 Logique de Reprise Après Blocage
+
+### Principe Général
+
+Quand le workflow est bloqué et reprend après input utilisateur, les étapes **DÉJÀ COMPLÉTÉES** sont **SKIPPÉES**.
+
+Le contexte du skill est maintenu pendant le blocage. Pas besoin de tout refaire.
+
+### Scénario 1: Blocage à ÉTAPE 1 (📁 Enrichissement)
+
+**Workflow initial** :
+1. ÉTAPE 0 complétée (si apprentissage requis)
+2. ÉTAPE 1 détecte nouveaux dossiers sans README
+3. ❌ **STOP** → Retourne 📁 Enrichissement Registry Nécessaire
+
+**Après input utilisateur** :
+1. Skill détecte "ENRICHISSEMENT REGISTRY:" dans l'input
+2. **SKIP ÉTAPE 0** (capacités déjà persistées si présentes)
+3. **Reprendre ÉTAPE 1** avec enrichissement → Ajouter dossiers au contexte
+4. Continuer ÉTAPE 2-7 normalement
+
+### Scénario 2: Blocage à ÉTAPE 3 (🔄 Clarifications)
+
+**Workflow initial** :
+1. ÉTAPES 0-2 complétées
+2. ÉTAPE 3 détecte ambiguïtés
+3. ❌ **STOP** → Retourne 🔄 Clarifications nécessaires
+
+**Après input utilisateur** :
+1. Skill détecte "PRÉCISIONS UTILISATEUR:" dans l'input
+2. **SKIP ÉTAPES 0-2** (contexte/impact déjà chargés)
+3. **Reprendre ÉTAPE 3** avec précisions
+4. Continuer ÉTAPE 4-7 normalement
+
+### Scénario 3: Blocage à ÉTAPE 4 (✋ Validation)
+
+**Workflow initial** :
+1. ÉTAPES 0-3 complétées
+2. ÉTAPE 4 détecte impact MAJEUR
+3. ❌ **STOP** → Retourne ✋ Validation requise
+
+**Après input utilisateur** :
+1. Skill détecte "VALIDATION UTILISATEUR: Approuvé" dans l'input
+2. **SKIP ÉTAPES 0-3** (contexte/impact/clarifications déjà faits)
+3. **Reprendre ÉTAPE 4** validation approuvée
+4. Continuer ÉTAPE 5-7 normalement
+
+### Combinaisons Possibles
+
+**Exemple**: Apprentissage + Enrichissement + Clarifications + Validation
+
+**1ère invocation** :
+```
+APPRENTISSAGE REQUIS: [...]
+DEMANDE UTILISATEUR: Créer une API
+```
+→ ÉTAPE 0 → ÉTAPE 1 détecte /api, /models → STOP 📁
+
+**2ème invocation** :
+```
+ENRICHISSEMENT REGISTRY:
+/api
+  purpose: Routes API REST
+  priority: high
+
+APPRENTISSAGE REQUIS: [...]
+DEMANDE UTILISATEUR: Créer une API
+```
+→ SKIP ÉTAPE 0 → ÉTAPE 1 reprend → ÉTAPE 2 → ÉTAPE 3 détecte ambiguïté → STOP 🔄
+
+**3ème invocation** :
+```
+PRÉCISIONS UTILISATEUR:
+- Base de données: PostgreSQL
+- Framework: FastAPI
+
+ENRICHISSEMENT REGISTRY: [...]
+APPRENTISSAGE REQUIS: [...]
+DEMANDE UTILISATEUR: Créer une API
+```
+→ SKIP ÉTAPES 0-2 → ÉTAPE 3 reprend → ÉTAPE 4 détecte MAJEUR → STOP ✋
+
+**4ème invocation** :
+```
+VALIDATION UTILISATEUR: Approuvé
+
+PRÉCISIONS UTILISATEUR: [...]
+ENRICHISSEMENT REGISTRY: [...]
+APPRENTISSAGE REQUIS: [...]
+DEMANDE UTILISATEUR: Créer une API
+```
+→ SKIP ÉTAPES 0-3 → ÉTAPE 4 reprend → ÉTAPE 5-7 → ✅ Succès !
+
+**Rationale**: Chaque blocage conserve le contexte déjà chargé. On ne recommence pas à zéro.
+
+---
+
 ## 📤 Formats de Sortie
 
 ### Succès
@@ -606,6 +703,41 @@ Cette section documente seulement le format d'affichage attendu (voir exemples �
 - Risques : Niveau + description concrète
 - Bénéfices : Liste à puces, résultats mesurables
 - Plan : Étapes numérotées avec estimations
+- Répéter demande initiale textuellement
+
+### Enrichissement Registry (📁)
+
+**⚠️ FORMAT EXACT À RESPECTER** :
+
+```
+📁 **Enrichissement Registry Nécessaire**
+
+[X] nouveaux dossiers détectés : /dossier1, /dossier2
+
+Format de réponse :
+
+/dossier1
+  purpose: [description ou "ignore"]
+  priority: [high/medium/low]
+
+/dossier2
+  purpose: [description ou "ignore"]
+  priority: [high/medium/low]
+
+Notes :
+- purpose: ignore → Ignoré définitivement (temp, .vscode, etc.)
+- Triggers auto-générés depuis description
+- Priority ignorée si purpose: ignore
+
+Exemple : "/workers" avec "purpose: Job processing avec Celery" et "priority: medium"
+---
+**Demande initiale** : [copier exactement la demande utilisateur]
+```
+
+**Règles** :
+- Lister tous les nouveaux dossiers détectés sans README
+- Format YAML-like strict (indentation 2 espaces)
+- Purpose obligatoire, priority optionnelle si "ignore"
 - Répéter demande initiale textuellement
 
 ---

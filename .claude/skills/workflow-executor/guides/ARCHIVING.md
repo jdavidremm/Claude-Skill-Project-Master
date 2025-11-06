@@ -18,7 +18,7 @@ Mettre à jour TOUS les fichiers de contexte après CHAQUE tâche. **OBLIGATOIRE
 - [ ] **2.** `.claude/context/system-state.md` MIS À JOUR
   - État + modules + métriques MAJ
 
-- [ ] **2.5.** `.claude/skills/workflow-executor/project-registry.json` MIS À JOUR (SI nouveaux dossiers)
+- [ ] **2.5.** `.claude/context/project-registry.json` MIS À JOUR (SI nouveaux dossiers)
   - Enrichi avec dossiers créés/détectés
   - Timestamp `last_scan` MAJ
 
@@ -86,7 +86,7 @@ Mettre à jour TOUS les fichiers de contexte après CHAQUE tâche. **OBLIGATOIRE
 
 ### 2.5. project-registry.json (SI NOUVEAUX DOSSIERS)
 
-**Emplacement** : `.claude/skills/workflow-executor/project-registry.json`
+**Emplacement** : `.claude/context/project-registry.json`
 
 **Objectif** : Persister les nouveaux dossiers/fichiers dans le registry pour chargement automatique futurs workflows.
 
